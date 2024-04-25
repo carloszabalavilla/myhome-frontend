@@ -10,7 +10,6 @@ import Auth from "../../services/AuthService";
 
 function Login() {
   console.log("Pagina del login iniciando.");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -77,7 +76,6 @@ function Login() {
         </div>
       </div>
     </MDBContainer>
-    
   );
 }
 

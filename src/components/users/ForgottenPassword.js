@@ -8,9 +8,8 @@ import {
 } from "mdb-react-ui-kit";
 import Auth from "../../services/AuthService";
 
-function Login() {
+function ForgottenPassword() {
   console.log("Pagina del login iniciando.");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -77,8 +76,7 @@ function Login() {
         </div>
       </div>
     </MDBContainer>
-    
   );
 }
 
-export default Login;
+export default ForgottenPassword;

@@ -1,4 +1,5 @@
 async function UserLogin(email, password,user) {
+  console.log("Iniciando inicio de sesión: ", email);
   return fetch("http://localhost:8081/auth/user/login", {
     method: "POST",
     headers: {
@@ -23,15 +24,16 @@ async function UserLogin(email, password,user) {
     });
 }
 
-async function ApiLogin(email, password) {
+async function ApiLogin(id, token) {
+  console.log("Iniciando inicio de sesión en la api: ", id);
   return fetch("http://localhost:8081/auth/user/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      email: email,
-      password: password,
+      id: id,
+      token: token,
     }),
   })
     .then((response) => {
