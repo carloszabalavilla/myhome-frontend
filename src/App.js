@@ -10,17 +10,16 @@ function App() {
   const [isLogginPage, setIsLogginPage] = useState(false);
 
   const handleLogin = () => {
-    // Aquí cambias el estado de isLoggedIn a true cuando el usuario inicia sesión
     setIsLoggedIn(true);
   };
   const handleLogginRoute = () => {
     setIsLogginPage(true);
   };
   return (
-    <div className="App"> 
+    <div className="App">
       <Router>
         <div>
-        <Navbar isLoggedIn={isLoggedIn} isLogginPage={isLogginPage} />
+          <Navbar isLoggedIn={isLoggedIn} isLogginPage={isLogginPage} />
           <Routes>
             <Route index element={<Home />} />
             <Route path="/login" element={<Login />} />
