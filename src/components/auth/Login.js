@@ -10,7 +10,7 @@ import Auth from "../../services/AuthService";
 
 function Login() {
   console.log("Pagina del login iniciando.");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLogginPage, setIsLogginPage] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
