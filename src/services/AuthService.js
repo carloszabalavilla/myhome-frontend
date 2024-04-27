@@ -15,6 +15,7 @@ function UserLogin(email, password, setShowError) {
       if (response.ok) {
         console.log("Inicio de sesión correcto");
         return response.json();
+      
       } else {
         console.error("Inicio de sesión incorrecto");
         alert("Inicio de sesión incorrecto");

@@ -48,7 +48,7 @@ async function PasswordChange(email, password) {
     });
 }
 
-async function newUser(email, password, name, surname) {
+function NewUser(email, password, name, surname) {
     console.log("Iniciando creacion de usuario: ", email);
   return fetch("http://localhost:8081/user/newUser", {
     method: "POST",
@@ -77,4 +77,4 @@ async function newUser(email, password, name, surname) {
 
 export default PasswordRecovery;
 export { PasswordChange };
-export { newUser };
+export { NewUser };

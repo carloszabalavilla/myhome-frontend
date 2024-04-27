@@ -51,7 +51,7 @@ function LoggedInNavbar() {
             {/* Agrega más enlaces según sea necesario */}
           </ul>
         </div>
-        <Link o nClick={handleLogout} className="btn btn-primary">
+        <Link onClick={() => handleLogout()} className="btn btn-primary">
           Salir
         </Link>
       </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
-import Account from "../../services/AccountService";
+import NewUser from "../../services/AccountService";
 
 function Register() {
   console.log("Pagina del registro iniciando.");
@@ -9,7 +9,7 @@ function Register() {
   const [password2, setPassword2] = React.useState("");
 
   const handleSubmit = () => {
-    Account.NewUser(email, password, password2);
+    NewUser(email, password, password2);
   };
 
   return (
@@ -32,7 +32,7 @@ function Register() {
       />
       <MDBInput
         wrapperClass="mb-4"
-        label="Repeta la contraseña"
+        label="Repita la contraseña"
         id="passwordReg2"
         type="password"
         value={password2}
@@ -40,7 +40,7 @@ function Register() {
       />
 
       <MDBBtn className="mb-4" onClick={handleSubmit}>
-        Register
+        Siguiente
       </MDBBtn>
     </MDBContainer>
   );

@@ -16,7 +16,6 @@ function Login() {
 //localStorage.setItem('user', JSON.stringify(user));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [showError, setShowError] = useState(false);
 
   const handleSubmit = () => {
@@ -74,7 +73,7 @@ function Login() {
 
         <div className="text-center">
           <p>
-            ¿No eres miembro? <a href="#!">Regístrate</a>
+            ¿No eres miembro? <a href="/register">Regístrate</a>
           </p>
           <p>o inicia sesión con:</p>
 
