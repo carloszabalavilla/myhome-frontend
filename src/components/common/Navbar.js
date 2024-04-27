@@ -1,11 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
+import { useUser } from "../../contexts/UserContext";
 
-const Navbar = ({ isLoggedIn, isLogginPage }) => {
+function Navbar() {
+  const { user } = useUser();
+  console.log("usuario en navbar", user);
   const renderNavbar = () => {
-    if (isLoggedIn) {
+    if (user != null) {
       return <LoggedInNavbar />;
-    } else if (isLogginPage) {
+    } else if (isNoNavbarPage()) {
       return null;
     } else {
       return <LoggedOutNavbar />;
@@ -13,9 +16,15 @@ const Navbar = ({ isLoggedIn, isLogginPage }) => {
   };
 
   return <div>{renderNavbar()}</div>;
-};
+}
 
-const LoggedInNavbar = () => {
+function LoggedInNavbar() {
+  const { setUser } = useUser();
+  const handleLogout = () => {
+    console.log("Cerrando sesión");
+    setUser(null);
+    redirect("/");
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
@@ -42,16 +51,15 @@ const LoggedInNavbar = () => {
             {/* Agrega más enlaces según sea necesario */}
           </ul>
         </div>
-        <Link to="/login" className="btn btn-primary">
-          Iniciar sesión
+        <Link o nClick={handleLogout} className="btn btn-primary">
+          Salir
         </Link>
-        {/* Agrega un botón de inicio de sesión */}
       </div>
     </nav>
   );
-};
+}
 
-const LoggedOutNavbar = () => {
+function LoggedOutNavbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
@@ -81,10 +89,16 @@ const LoggedOutNavbar = () => {
         <Link to="/login" className="btn btn-primary">
           Iniciar sesión
         </Link>
-        {/* Agrega un botón de inicio de sesión */}{" "}
       </div>
     </nav>
   );
-};
+}
+
+function isNoNavbarPage() {
+  return (
+    window.location.pathname === "/login" ||
+    window.location.pathname === "/register"
+  );
+}
 
 export default Navbar;

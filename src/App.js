@@ -1,33 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/common/Navbar";
 import Home from "./components/common/Home";
 import Login from "./components/auth/Login";
+import Dashboard from "./components/dashboards/userDashboard";
+import { UserProvider } from "./contexts/UserContext";
 
 function App() {
   console.log("Inicio del cliente.");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLogginPage, setIsLogginPage] = useState(false);
 
-  const handleLogin = () => {
-    // Aquí cambias el estado de isLoggedIn a true cuando el usuario inicia sesión
-    setIsLoggedIn(true);
-  };
-  const handleLogginRoute = () => {
-    setIsLogginPage(true);
-  };
   return (
-    <div className="App"> 
-      <Router>
-        <div>
-        <Navbar isLoggedIn={isLoggedIn} isLogginPage={isLogginPage} />
+    <div className="App">
+      <UserProvider>
+        <Router>
+          <Navbar />
           <Routes>
             <Route index element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
-        </div>
-      </Router>
+        </Router>
+      </UserProvider>
     </div>
   );
 }
+
 export default App;
