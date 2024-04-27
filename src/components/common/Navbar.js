@@ -28,23 +28,23 @@ function LoggedInNavbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
-        <Link className="navbar-brand" to="/">
-          MyHome
+        <Link className="navbar-brand" to="/dashboard">
+          MyDashboard
         </Link>
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link className="nav-link" to="/">
-                Inicio
+              <Link className="nav-link" to="/tasks">
+                Tareas
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/about">
-                Modulos
+              <Link className="nav-link" to="/finances">
+                Finanzas
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/contact">
+              <Link className="nav-link" to="/support">
                 Soporte
               </Link>
             </li>
@@ -64,23 +64,23 @@ function LoggedOutNavbar() {
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
         <Link className="navbar-brand" to="/">
-          MyApp
+          MyHome
         </Link>
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
               <Link className="nav-link" to="/">
-                Inicio
+                About
               </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/about">
-                Acerca de
+                Modulos
               </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/contact">
-                Contacto
+                Download
               </Link>
             </li>
             {/* Agrega más enlaces según sea necesario */}
