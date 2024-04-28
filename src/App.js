@@ -3,26 +3,32 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/common/Navbar";
 import Home from "./components/common/Home";
 import Login from "./components/auth/Login";
-import Register from "./components/auth/Register";
-import ForgottenUser from "./components/auth/ForgottenUser";
+import Dashboard from "./components/dashboards/UserDashboard";
+import Register from "./components/users/Register";
+import ForgottenPassword from "./components/auth/ForgottenPassword";
+import { UserProvider } from "./contexts/UserContext";
 
 function App() {
   console.log("Inicio del cliente.");
+
   return (
     <div className="App">
-    
-      <Router>
-        <div>
+      <UserProvider>
+        <Router>
           <Navbar />
           <Routes>
             <Route index element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/forgotten-user" element={<ForgottenUser />} />
+            <Route path="/forgot-password" element={<ForgottenPassword />} />
+            <Route path="/reset-password" element={<ForgottenPassword />} />
+            <Route path="/*">"404 Not Found"</Route>
           </Routes>
-        </div>
-      </Router>
+        </Router>
+      </UserProvider>
     </div>
   );
 }
+
 export default App;
