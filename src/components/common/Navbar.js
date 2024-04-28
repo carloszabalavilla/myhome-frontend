@@ -1,21 +1,30 @@
 import React from "react";
-import { Link, redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
+import { useLocation } from "react-router-dom";
 
 function Navbar() {
   const { user } = useUser();
+  const location = useLocation();
   console.log("usuario en navbar", user);
-  const renderNavbar = () => {
-    if (user != null) {
-      return <LoggedInNavbar />;
-    } else if (isNoNavbarPage()) {
-      return null;
-    } else {
-      return <LoggedOutNavbar />;
-    }
-  };
 
-  return <div>{renderNavbar()}</div>;
+  const isNoNavPage =
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname === "/forgot-password" ||
+    location.pathname === "/reset-password" ||
+    location.pathname === "/change-password";
+  const isLoggedIn = user !== null;
+
+  return (
+    <div>
+      {isNoNavPage ? null : isLoggedIn ? (
+        <LoggedInNavbar />
+      ) : (
+        <LoggedOutNavbar />
+      )}
+    </div>
+  );
 }
 
 function LoggedInNavbar() {
@@ -23,8 +32,8 @@ function LoggedInNavbar() {
   const handleLogout = () => {
     console.log("Cerrando sesión");
     setUser(null);
-    redirect("/");
   };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
@@ -51,7 +60,7 @@ function LoggedInNavbar() {
             {/* Agrega más enlaces según sea necesario */}
           </ul>
         </div>
-        <Link onClick={() => handleLogout()} className="btn btn-primary">
+        <Link to="/" onClick={handleLogout} className="btn btn-primary">
           Salir
         </Link>
       </div>
@@ -70,7 +79,7 @@ function LoggedOutNavbar() {
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
               <Link className="nav-link" to="/">
-                About
+                Productos
               </Link>
             </li>
             <li className="nav-item">
@@ -80,7 +89,7 @@ function LoggedOutNavbar() {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/contact">
-                Download
+                Descarga
               </Link>
             </li>
             {/* Agrega más enlaces según sea necesario */}
@@ -91,13 +100,6 @@ function LoggedOutNavbar() {
         </Link>
       </div>
     </nav>
-  );
-}
-
-function isNoNavbarPage() {
-  return (
-    window.location.pathname === "/login" ||
-    window.location.pathname === "/register"
   );
 }
 

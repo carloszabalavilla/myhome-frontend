@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, redirect } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   MDBContainer,
   MDBInput,
@@ -12,8 +12,10 @@ import { useUser } from "../../contexts/UserContext";
 
 function Login() {
   console.log("Pagina del login iniciando.");
+  const navigate = useNavigate();
+
   const { setUser } = useUser();
-//localStorage.setItem('user', JSON.stringify(user));
+  //localStorage.setItem('user', JSON.stringify(user));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
@@ -21,13 +23,13 @@ function Login() {
   const handleSubmit = () => {
     console.log("Llamando al servicio para el usuario: ", email);
     setUser(UserLogin(email, password, setShowError));
-    redirect("/dashboard");
+    navigate("/dashboard");
   };
 
   return (
     <div>
       <div className="m-3">
-        <Link to="/" className="btn btn-primary" onClick={redirect("/")}>
+        <Link to="/" className="btn btn-primary">
           Volver
         </Link>
       </div>
@@ -49,7 +51,7 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
         {showError ? (
-          <div name="loginErrorMsg" color="danger">
+          <div name="loginErrorMsg" className="text-danger">
             <span>Usuario o contraseña incorrectos</span>
           </div>
         ) : null}
@@ -60,7 +62,7 @@ function Login() {
             id="flexCheckDefault"
             label="Recuerdame"
           />
-          <a href="!#">¿Olvidó la contraseña?</a>
+          <Link href="/forgot-password">¿Olvidó la contraseña?</Link>
         </div>
 
         <MDBBtn
