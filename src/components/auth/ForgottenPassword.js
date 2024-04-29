@@ -13,7 +13,6 @@ import {
   MDBModalFooter,
 } from "mdb-react-ui-kit";
 import { PasswordRecovery } from "../../services/AuthService";
-import {} from "mdb-ui-kit";
 
 function ForgottenPassword() {
   console.log("Pagina del login iniciando.");
