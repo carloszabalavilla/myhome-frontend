@@ -4,6 +4,7 @@ import Navbar from "./components/common/Navbar";
 import Home from "./components/common/Home";
 import Login from "./components/auth/Login";
 import Dashboard from "./components/dashboards/UserDashboard";
+import TaskManager from "./components/tasks/TaskManager";
 import Register from "./components/users/Register";
 import ForgottenPassword from "./components/auth/ForgottenPassword";
 import { UserProvider } from "./contexts/UserContext";
@@ -20,6 +21,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/task/management" element={<TaskManager/>} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgottenPassword />} />
             <Route path="/reset-password" element={<ForgottenPassword />} />
