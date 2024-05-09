@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  MDBContainer,
-  MDBInput,
-  MDBBtn,
-} from "mdb-react-ui-kit";
 import { PasswordChange } from "../../services/AuthService";
+import { Button, Container, Input } from "@mui/material";
 
-function Login() {
+function ChangePassword() {
   console.log("Pagina del login iniciando.");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -19,8 +15,8 @@ function Login() {
   };
 
   return (
-    <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
-      <MDBInput
+    <Container className="p-3 my-5 d-flex flex-column w-50">
+      <Input
         wrapperClass="mb-4"
         label="Contraseña nueva"
         id="form1"
@@ -28,7 +24,7 @@ function Login() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <MDBInput
+      <Input
         wrapperClass="mb-4"
         label="Repetir contraseña nueva"
         id="form2"
@@ -36,11 +32,11 @@ function Login() {
         value={password2}
         onChange={(e) => setPassword2(e.target.value)}
       />
-      <MDBBtn className="mb-4" onClick={handleSubmit}>
+      <Button className="mb-4" onClick={handleSubmit}>
         Recuperar la contraseña
-      </MDBBtn>
-    </MDBContainer>
+      </Button>
+    </Container>
   );
 }
 
-export default Login;
+export default ChangePassword;

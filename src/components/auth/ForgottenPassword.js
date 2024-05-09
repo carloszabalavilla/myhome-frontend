@@ -1,41 +1,39 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  MDBContainer,
-  MDBInput,
-  MDBBtn,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalTitle,
-  MDBModalBody,
-  MDBModalFooter,
-} from "mdb-react-ui-kit";
 import { PasswordRecovery } from "../../services/AuthService";
-
+import { Button, Container, Input, Modal, Backdrop, Box, Fade, Typography } from "@mui/material";
+import GoBack from "../common/GoBack";
 function ForgottenPassword() {
+
   console.log("Pagina del login iniciando.");
-  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
-  const [basicModal, setBasicModal] = useState(false);
-  const toggleOpen = () => setBasicModal(!basicModal);
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  
   const handleSubmit = () => {
     PasswordRecovery(email);
-    toggleOpen();
+    handleOpen();
+  };
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
   };
 
   return (
     <div>
-      <div className="m-3">
-        <Link className="btn btn-primary" onClick={() => navigate(-1)}>
-          Volver
-        </Link>
-      </div>
-      <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
-        <MDBInput
+      <GoBack/>
+      <Container className="p-3 my-5 d-flex flex-column w-50">
+        <Input
           wrapperClass="mb-4"
           label="Correo electrónico"
           id="form1"
@@ -43,31 +41,39 @@ function ForgottenPassword() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <MDBBtn
+        <Button
           className="mb-4"
           onClick={handleSubmit}
         >
           Recuperar
-        </MDBBtn>
-      </MDBContainer>
-      <MDBModal open={basicModal} onClose={() => setBasicModal(false)} tabIndex='-1'>
-        <MDBModalDialog>
-          <MDBModalContent>
-            <MDBModalHeader>
-              <MDBModalTitle>Modal title</MDBModalTitle>
-              <MDBBtn className='btn-close' color='none' onClick={toggleOpen}></MDBBtn>
-            </MDBModalHeader>
-            <MDBModalBody>
-              <span>Se ha enviado un correo.</span>
-            </MDBModalBody>
-            <MDBModalFooter>
-              <MDBBtn color='secondary' onClick={toggleOpen}>
-                Cerrar
-              </MDBBtn>
-            </MDBModalFooter>
-          </MDBModalContent>
-        </MDBModalDialog>
-      </MDBModal>
+        </Button>
+      </Container>
+    <div>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            <Typography id="transition-modal-title" variant="h6" component="h2">
+              Text in a modal
+            </Typography>
+            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            </Typography>
+          </Box>
+        </Fade>
+      </Modal>
+    </div>
     </div>
   );
 }

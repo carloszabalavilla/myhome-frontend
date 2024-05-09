@@ -1,6 +1,6 @@
-function UserLogin(email, password, setShowError) {
+function UserLogin(email, password) {
   console.log("Iniciando inicio de sesión: ", email);
-  return fetch("http://localhost:8081/auth/user/login", {
+  return fetch("http://localhost:8081/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,8 +17,7 @@ function UserLogin(email, password, setShowError) {
         return response.json();
       } else {
         console.error("Inicio de sesión incorrecto");
-        alert("Inicio de sesión incorrecto");
-        setShowError(true);
+        return null;
       }
     })
     .then((data) => {
@@ -28,7 +27,7 @@ function UserLogin(email, password, setShowError) {
     })
     .catch((error) => {
       console.error("Error:", error);
-      alert("Error en inicio de sesión");
+      return null;
     });
 }
 

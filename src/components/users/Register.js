@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { MDBContainer, MDBInput, MDBBtn, MDBIcon } from "mdb-react-ui-kit";
 import NewUser from "../../services/AccountService";
 import { useNavigate } from "react-router-dom";
+import { Container, Button, Icon, Input } from "@mui/material";
 
 function Register() {
   console.log("Pagina del registro iniciando.");
@@ -47,8 +47,8 @@ function Register() {
           Volver
         </Link>
       </div>
-      <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
-        <MDBInput
+      <Container className="p-3 my-5 d-flex flex-column w-50">
+        <Input
           wrapperClass="mb-4"
           label="Correo electronico"
           id="emailReg"
@@ -56,7 +56,7 @@ function Register() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <MDBInput
+        <Input
           wrapperClass="mb-4"
           label="Contraseña"
           id="passwordReg"
@@ -69,10 +69,10 @@ function Register() {
             onClick={handleToggle}
             style={{ cursor: "pointer" }}
           >
-            <MDBIcon far icon={icon} />
+            <Icon far icon={icon} />
           </div>
-        </MDBInput>
-        <MDBInput
+        </Input>
+        <Input
           wrapperClass="mb-4"
           label="Repita la contraseña"
           id="passwordReg2"
@@ -85,14 +85,14 @@ function Register() {
             onClick={handleToggle2}
             style={{ cursor: "pointer" }}
           >
-            <MDBIcon far icon={icon2} />
+            <Icon far icon={icon2} />
           </div>
-        </MDBInput>
+        </Input>
 
-        <MDBBtn className="mb-4" onClick={handleSubmit}>
+        <Button className="mb-4" onClick={handleSubmit}>
           Siguiente
-        </MDBBtn>
-      </MDBContainer>
+        </Button>
+      </Container>
     </div>
   );
 }
