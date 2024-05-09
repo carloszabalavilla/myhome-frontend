@@ -1,5 +1,6 @@
 import React from "react";
-import Box from "@mui/material/Box";
+import { useTheme } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -10,12 +11,11 @@ import Link from "@mui/material/Link";
 const footer = ["React", "Material UI", "Contacto", "Acerca de"];
 
 export default function Footer() {
+  const secColor = useTheme().palette.secondary.main;
+
   return (
-    <Box
+    <Paper
       sx={{
-        position: "fixed",
-        left: 0,
-        bottom: 0,
         width: "100%",
         backgroundColor: "primary.main",
         py: 2,
@@ -35,7 +35,7 @@ export default function Footer() {
                 sx={{
                   mx: 1,
                   color: "black",
-                  ":hover": { color: "#ffcc80", fontWeight: 700 },
+                  ":hover": { color: secColor, fontWeight: 700 },
                 }}
               >
                 {page}
@@ -44,14 +44,14 @@ export default function Footer() {
           </Stack>
         </Grid>
         <Grid item xs={12} mt>
-          <Copyrigth />
+          <Copyrigth color={secColor} />
         </Grid>
       </Grid>
-    </Box>
+    </Paper>
   );
 }
 
-export function Copyrigth() {
+export function Copyrigth(color) {
   return (
     <Typography align="center">
       {"Copyright © "}

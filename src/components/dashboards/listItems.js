@@ -15,19 +15,19 @@ import LocalDiningIcon from "@mui/icons-material/LocalDining";
 const basePath = "/user";
 
 export const mainListItems = [
-  { text: "Dashboard", icon: <DashboardIcon />, href: basePath + "/dashboard" },
+  { text: "Dashboard", icon: <DashboardIcon />, href: basePath + "/user/dashboard" },
   {
     text: "Tareas",
     icon: <AssignmentIcon />,
-    href: basePath + "/tasks/management",
+    href: basePath + "/user/tasks/management",
   },
-  { text: "Finanzas", icon: <SavingsIcon />, href: basePath + "/finances" },
+  { text: "Finanzas", icon: <SavingsIcon />, href: basePath + "/user/finances" },
   {
     text: "Alimentación",
     icon: <LocalDiningIcon />,
     href: basePath + "/nutrition",
   },
-  { text: "Grupo Familiar", icon: <PeopleIcon />, href: basePath + "/family" },
+  { text: "Grupo Familiar", icon: <PeopleIcon />, href: basePath + "/user/family" },
 ];
 
 export const secondaryListItems = (

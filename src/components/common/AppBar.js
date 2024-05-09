@@ -23,7 +23,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 
 const drawerWidth = 240;
 const Outpages = ["Modulos", "Tarifas", "Soporte"];
@@ -53,8 +53,6 @@ function Navbar() {
 }
 
 function LoggedInNavbar() {
-
-
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -260,6 +258,9 @@ function LoggedInNavbar() {
 }
 
 function LoggedOutNavbar() {
+  const primColor = useTheme().palette.primary.main;
+  const secColor = useTheme().palette.secondary.main;
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -279,7 +280,7 @@ function LoggedOutNavbar() {
             sx={{
               display: { xs: "none", md: "flex" },
               color: "black",
-              ":hover": { color: "#ffcc80" },
+              ":hover": { color: secColor },
               textTransform: "none",
             }}
           >
@@ -319,7 +320,7 @@ function LoggedOutNavbar() {
                   sx={{
                     mx: 1,
                     color: "black",
-                    ":hover": { color: "#ffcc80", fontWeight: 700 },
+                    ":hover": { color: secColor, fontWeight: 700 },
                   }}
                 >
                   {page}
@@ -374,7 +375,7 @@ function LoggedOutNavbar() {
               flexGrow: 1,
               display: { xs: "flex", md: "none" },
               color: "black",
-              ":hover": { color: "#ffcc80" },
+              ":hover": { color: secColor },
               textTransform: "none",
             }}
           >

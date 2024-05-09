@@ -45,7 +45,7 @@ function SignIn() {
     <>
       <Container sx={{ mt: 5 }}>
         <GoBack display={"flex"} justifyContent={"left"} />
-        <Container sx={{ mt: 15, scale: "1.2" }}>
+        <Container sx={{ scale: "1.02" }}>
           <Box
             sx={{
               display: "flex",
@@ -54,7 +54,11 @@ function SignIn() {
             }}
           >
             <Avatar
-              sx={{ m: 1, bgcolor: primColor, ":hover": { bgcolor: secColor } }}
+              sx={{
+                m: 1,
+                bgcolor: primColor,
+                ":hover": { bgcolor: secColor, transition: "all 0.2s" },
+              }}
             >
               <LockOutlinedIcon />
             </Avatar>
@@ -73,7 +77,12 @@ function SignIn() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoFocus
-                sx={{ ":hover": { transform: "scale(1.05)" } }}
+                sx={{
+                  ":hover": {
+                    transition: "all 0.2s",
+                    transform: "scale(1.05)",
+                  },
+                }}
               />
               <TextField
                 variant="outlined"
@@ -87,7 +96,12 @@ function SignIn() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
-                sx={{ ":hover": {transition: {"all 1s"},  transform: {"scale(1.05)"}}}}
+                sx={{
+                  ":hover": {
+                    transition: "all 0.2s",
+                    transform: "scale(1.05)",
+                  },
+                }}
               />
               {showError && (
                 <Alert severity="error">Usuario o contraseña incorrectos</Alert>
@@ -99,13 +113,34 @@ function SignIn() {
               >
                 <Grid item>
                   <FormControlLabel
-                    control={<Checkbox value="remember" color="secondary" />}
+                    control={
+                      <Checkbox
+                        value="remember"
+                        color="secondary"
+                        sx={{
+                          ":hover": {
+                            transition: "all 0.2s",
+                            transform: "scale(1.1)",
+                          },
+                        }}
+                      />
+                    }
                     label="Recuérdame"
                   />
                 </Grid>
                 <Grid item>
                   <Grid container alignItems="center">
-                    <Link href="/forgot-password">¿Olvidó la contraseña?</Link>
+                    <Link
+                      href="/auth/forgot-password"
+                      sx={{
+                        ":hover": {
+                          transition: "all 0.2s",
+                          transform: "scale(1.05)",
+                        },
+                      }}
+                    >
+                      ¿Olvidó la contraseña?
+                    </Link>
                   </Grid>
                 </Grid>
               </Grid>
@@ -114,21 +149,30 @@ function SignIn() {
                 fullWidth
                 variant="contained"
                 onClick={handleSubmit}
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  ":hover": {
+                    transition: "all 0.2s",
+                    transform: "scale(1.05)",
+                  },
+                }}
                 disabled={!email || !password}
               >
                 Iniciar sesión
               </Button>
               <Box textAlign="center">
-                <Link href="/register">¿No tienes una cuenta? Regístrate</Link>
+                <Link href="/auth/register">
+                  ¿No tienes una cuenta? Regístrate
+                </Link>
                 <Typography my>O inicia sesión con:</Typography>
                 <SignInIcons />
               </Box>
             </Box>
           </Box>
         </Container>
-        <Footer />
-      </Container>
+      </Container>{" "}
+      <Footer />
     </>
   );
 }

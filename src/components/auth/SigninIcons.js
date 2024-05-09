@@ -12,21 +12,36 @@ export default function SignInIcons() {
     <Box align="center">
       <Button
         sx={{
-          ":hover": { color: secColor, backgroundColor: "transparent" },
+          ":hover": {
+            color: secColor,
+            backgroundColor: "transparent",
+            transition: "all 0.2s",
+            transform: "scale(1.1)",
+          },
         }}
       >
         <FacebookIcon />
       </Button>
       <Button
         sx={{
-          ":hover": { color: secColor, backgroundColor: "transparent" },
+          ":hover": {
+            color: secColor,
+            backgroundColor: "transparent",
+            transition: "all 0.2s",
+            transform: "scale(1.1)",
+          },
         }}
       >
         <GoogleIcon />
       </Button>
       <Button
         sx={{
-          ":hover": { color: secColor, backgroundColor: "transparent" },
+          ":hover": {
+            color: secColor,
+            backgroundColor: "transparent",
+            transition: "all 0.2s",
+            transform: "scale(1.1)",
+          },
         }}
       >
         <XIcon />
