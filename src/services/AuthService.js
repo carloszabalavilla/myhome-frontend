@@ -1,34 +1,31 @@
-function UserLogin(email, password) {
+async function UserLogin(email, password, setMessage) {
   console.log("Iniciando inicio de sesión: ", email);
-  return fetch("http://localhost:8081/auth/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
-  })
-    .then((response) => {
-      console.log("Respuesta del servidor: ", response);
-      if (response.ok) {
-        console.log("Inicio de sesión correcto");
-        return response.json();
-      } else {
-        console.error("Inicio de sesión incorrecto");
-        return null;
-      }
-    })
-    .then((data) => {
-      // data contendrá los datos del usuario si la respuesta fue exitosa
-      console.log("Usuario encontrado: ", data);
-      return data; // Devolver los datos del usuario para su uso posterior
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      return null;
+
+  try {
+    const response = await fetch("http://localhost:8081/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
     });
+    const data = await response.json();
+    console.log("Respuesta del servidor: ", response);
+    if (response.ok) {
+      return data;
+    } else {
+      console.log("message" + response);
+      setMessage(response.body);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error: ", error);
+    setMessage(response);
+    return null;
+  }
 }
 
 async function ApiLogin(id, token) {
@@ -96,7 +93,7 @@ function PasswordChange(password, password2) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      password: password
+      password: password,
     }),
   })
     .then((response) => {

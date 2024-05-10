@@ -1,99 +1,270 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import NewUser from "../../services/AccountService";
 import { useNavigate } from "react-router-dom";
-import { Container, Button, Icon, Input } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Link from "@mui/material/Link";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { useTheme } from "@mui/material/styles";
+import GoBack from "../common/GoBack";
+import NewUser from "../../services/AccountService";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import FormControl from "@mui/material/FormControl";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { useUser } from "../../contexts/UserContext";
+import { Alert, CircularProgress } from "@mui/material";
+import { green } from "@mui/material/colors";
+import CheckIcon from "@mui/icons-material/Check";
 
 function Register() {
   console.log("Pagina del registro iniciando.");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [password2, setPassword2] = React.useState("");
-  const [type, setType] = useState("password");
-  const [type2, setType2] = useState("password");
-  const [icon, setIcon] = useState("eye-slash");
-  const [icon2, setIcon2] = useState("eye-slash");
   const navigate = useNavigate();
+  const primColor = useTheme().palette.primary.main;
+  const secColor = useTheme().palette.secondary.main;
+  const { user, setUser } = useUser("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showError, setShowError] = useState(false);
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const timer = React.useRef();
 
-  const handleSubmit = () => {
-    NewUser(email, password, password2);
-    //    navigate("/dashboard");
-  };
+  const handleSubmit = async () => {
+    if (password !== password2) {
+      setMessage("Las contraseñas no coinciden");
+      setShowError(true);
+      setLoading(false);
+      return;
+    }
+    setSuccess(false);
+    setLoading(true);
+    setUser(await NewUser(email, password));
 
-  const handleToggle = () => {
-    console.log("Cambiando tipo de input: ", type);
-    if (type === "password") {
-      setIcon("eye");
-      setType("text");
+    if (user === "registerError") {
+      setMessage("Error en el registro, pruebe de nuevo mas tarde");
+      setShowError(true);
+      setLoading(false);
+    } else if (user === null) {
+      setMessage("Email ya registrado");
+      setShowError(true);
+      setLoading(false);
     } else {
-      setIcon("eye-slash");
-      setType("password");
+      console.log("Usuario registrado: ", user);
+      setMessage("Usuario registrado exitosamente");
+      setSuccess(true);
+      setLoading(false);
+      setTimeout(() => {
+        navigate("/auth/login");
+      }, 2000);
     }
   };
-  const handleToggle2 = () => {
-    if (type2 === "password") {
-      setIcon2("eye");
-      setType2("text");
-    } else {
-      setIcon2("eye-slash");
-      setType2("password");
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const buttonSx = {
+    mt: 2,
+    mb: 3,
+    ...(success && {
+      bgcolor: green[500],
+      "&:hover": {
+        bgcolor: green[700],
+      },
+    }),
+  };
+
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
+
+  const handleButtonClick = () => {
+    if (!loading) {
+      setSuccess(false);
+      setLoading(true);
+      timer.current = setTimeout(() => {
+        setSuccess(true);
+        setLoading(false);
+      }, 2000);
     }
   };
 
   return (
-    <div>
-      <div className="m-3">
-        <Link className="btn btn-primary" onClick={() => navigate(-1)}>
-          Volver
-        </Link>
-      </div>
-      <Container className="p-3 my-5 d-flex flex-column w-50">
-        <Input
-          wrapperClass="mb-4"
-          label="Correo electronico"
-          id="emailReg"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <Input
-          wrapperClass="mb-4"
-          label="Contraseña"
-          id="passwordReg"
-          type={type}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+    <Container sx={{ mt: 3 }}>
+      <GoBack display={"flex"} justifyContent={"left"} />
+      <Container sx={{ scale: "1.02" }}>
+        <Box
+          sx={{
+            mt: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
-          <div
-            className="flex justify-around items-center pe-1 trailing pe-auto "
-            onClick={handleToggle}
-            style={{ cursor: "pointer" }}
+          <Avatar
+            sx={{
+              m: 1,
+              bgcolor: primColor,
+              ":hover": { bgcolor: secColor, transition: "all 0.2s" },
+            }}
           >
-            <Icon far icon={icon} />
-          </div>
-        </Input>
-        <Input
-          wrapperClass="mb-4"
-          label="Repita la contraseña"
-          id="passwordReg2"
-          type={type2}
-          value={password2}
-          onChange={(e) => setPassword2(e.target.value)}
-        >
-          <div
-            class="flex justify-around items-center pe-1 trailing pe-auto "
-            onClick={handleToggle2}
-            style={{ cursor: "pointer" }}
-          >
-            <Icon far icon={icon2} />
-          </div>
-        </Input>
+            <LockOpenIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Registro
+          </Typography>
+          <Box noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Correo electrónico"
+              name="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoFocus
+              sx={{
+                ":hover": {
+                  transition: "all 0.2s",
+                  transform: "scale(1.02)",
+                },
+                mb: 2,
+              }}
+            />
+            <FormControl
+              fullWidth
+              required
+              autoFocus
+              variant="outlined"
+              sx={{
+                ":hover": {
+                  transition: "all 0.2s",
+                  transform: "scale(1.02)",
+                },
+                mb: 2,
+              }}
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Contraseña
+              </InputLabel>
+              <OutlinedInput
+                id="password1"
+                label="Password"
+                name="password1"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            <FormControl
+              fullWidth
+              required
+              variant="outlined"
+              sx={{
+                ":hover": {
+                  transition: "all 0.2s",
+                  transform: "scale(1.02)",
+                },
+                mb: 2,
+              }}
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Repita la contraseña
+              </InputLabel>
+              <OutlinedInput
+                id="password2"
+                name="password2"
+                type={showPassword ? "text" : "password"}
+                value={password2}
+                onChange={(e) => setPassword2(e.target.value)}
+                autoFocus
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+            </FormControl>
+            {showError && <Alert severity="error">{message}</Alert>}
+            <Box sx={{ m: 1, position: "relative" }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                onClick={handleSubmit}
+                sx={buttonSx}
+                disabled={!email || !password || !password2 || loading}
+              >
+                {success ? <CheckIcon /> : "Registrarse"}
+              </Button>
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  sx={{
+                    color: green[500],
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    marginTop: "-12px",
+                    marginLeft: "-12px",
+                  }}
+                />
+              )}
+            </Box>
 
-        <Button className="mb-4" onClick={handleSubmit}>
-          Siguiente
-        </Button>
+            <Box textAlign="center">
+              <Link
+                href="/auth/login"
+                sx={{
+                  ":hover": {
+                    transition: "all 0.2s",
+                    transform: "scale(1.02)",
+                  },
+                }}
+              >
+                ¿Ya tienes cuenta? Inicia sesión
+              </Link>
+            </Box>
+          </Box>
+        </Box>
       </Container>
-    </div>
+    </Container>
   );
 }
 
