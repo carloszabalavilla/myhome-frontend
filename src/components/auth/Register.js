@@ -10,7 +10,7 @@ import Container from "@mui/material/Container";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { useTheme } from "@mui/material/styles";
 import GoBack from "../common/GoBack";
-import NewUser from "../../services/AccountService";
+import { NewUser } from "../../services/AuthService";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import FormControl from "@mui/material/FormControl";
@@ -43,7 +43,6 @@ function Register() {
     if (password !== password2) {
       setMessage("Las contraseñas no coinciden");
       setShowError(true);
-      setLoading(false);
       return;
     }
     setSuccess(false);

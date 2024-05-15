@@ -8,6 +8,7 @@ import {
   Divider,
   Card,
   CardContent,
+  Container,
 } from "@mui/material";
 import Footer from "./Footer";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
@@ -15,7 +16,7 @@ import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 function Home() {
   console.log("Redirigiendo a la página de inicio.");
   return (
-    <Box>
+    <Container>
       <Grid container spacing={6} mt={8}>
         <Grid item xs={12} xl={6}>
           <Slogan />
@@ -31,7 +32,7 @@ function Home() {
         </Grid>
       </Grid>
       <Footer />
-    </Box>
+    </Container>
   );
 }
 

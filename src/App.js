@@ -5,9 +5,9 @@ import Home from "./components/common/Home";
 import Login from "./components/auth/Signin";
 import Dashboard from "./components/dashboards/Dashboard";
 import TaskManager from "./components/tasks/TaskManager";
-import Register from "./components/users/Register";
+import Register from "./components/auth/Register";
 import ForgottenPassword from "./components/auth/ForgottenPassword";
-import ChangePassword from "./components/auth/ChangePassword";
+import ResetPassword from "./components/auth/ResetPassword";
 import { UserProvider } from "./contexts/UserContext";
 import { CssBaseline } from "@mui/material";
 import ToggleColorMode from "./components/theme/ToggleColorMode";
@@ -33,7 +33,7 @@ function App() {
               path="/auth/forgot-password"
               element={<ForgottenPassword />}
             />
-            <Route path="/auth/reset-password" element={<ChangePassword />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
           </Routes>
         </Router>
       </UserProvider>

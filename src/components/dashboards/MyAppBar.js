@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -18,8 +19,9 @@ import DarkModeSwitch from "../theme/DarkModeSwitch";
 import SecondaryAppBar from "./SecondaryAppBar";
 import { useTheme } from "@mui/material/styles";
 import { useState, useEffect } from "react";
+import { Divider } from "@mui/material";
 
-const settings = ["Perfil", "Cuenta", "Ajustes", "Salir"];
+const settings = ["Perfil", "Cuenta", "Configuracion", "Salir"];
 
 const drawerWidth = 240;
 
@@ -106,10 +108,46 @@ export default function MyAppBar({ open }) {
 
 function AvatarProfile() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const user = localStorage.getItem("user");
+  const username = JSON.parse(user).name;
+  const firstLetter = username.charAt(0);
+  const secColor = useTheme().palette.secondary.main;
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
+  
+  const handleItemClick = (action) => {
+    // Aquí puedes definir la lógica para cada acción
+    switch (action) {
+      case 'Cuenta':
+        console.log('Ir a la cuenta');
+        navigate('/user/account');
+        break;
+      case 'Perfil':
+        console.log('Ir al perfil');
+        navigate('/user/settings');
+        break;
+      case 'Configuracion':
+        console.log('Ir a la configuración');
+        navigate('/user/settings');
+        break;
+      case 'Salir':
+        handleLogout();
+        console.log('Usuario desconectado');
+        break;
+      default:
+        break;
+    }
+    handleCloseUserMenu();
+  };
+
+  function handleLogout (){
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -118,7 +156,7 @@ function AvatarProfile() {
     <Box sx={{ flexGrow: 0 }} mx>
       <Tooltip title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+        <Avatar sx={{ bgcolor: secColor}}>{firstLetter}</Avatar>
         </IconButton>
       </Tooltip>
       <Menu
@@ -137,8 +175,12 @@ function AvatarProfile() {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
+        <MenuItem disabled>
+          <Typography textAlign="center">{username}</Typography>
+        </MenuItem>
+        <Divider />
         {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+          <MenuItem key={setting} onClick={() => handleItemClick(setting)}>
             <Typography textAlign="center">{setting}</Typography>
           </MenuItem>
         ))}

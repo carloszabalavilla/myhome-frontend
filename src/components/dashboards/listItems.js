@@ -15,43 +15,36 @@ import LocalDiningIcon from "@mui/icons-material/LocalDining";
 const basePath = "/user";
 
 export const mainListItems = [
-  { text: "Dashboard", icon: <DashboardIcon />, href: basePath + "/user/dashboard" },
+  { text: "Dashboard", icon: <DashboardIcon />, href: basePath + "/dashboard" },
   {
     text: "Tareas",
     icon: <AssignmentIcon />,
-    href: basePath + "/user/tasks/management",
+    href: basePath + "/tasks/management",
   },
-  { text: "Finanzas", icon: <SavingsIcon />, href: basePath + "/user/finances" },
+  { text: "Finanzas", icon: <SavingsIcon />, href: basePath + "/finances" },
   {
     text: "Alimentación",
     icon: <LocalDiningIcon />,
     href: basePath + "/nutrition",
   },
-  { text: "Grupo Familiar", icon: <PeopleIcon />, href: basePath + "/user/family" },
+  { text: "Grupo Familiar", icon: <PeopleIcon />, href: basePath + "/family" },
 ];
 
-export const secondaryListItems = (
-  <React.Fragment>
-    <ListSubheader component="div" inset>
-      Saved reports
-    </ListSubheader>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItemButton>
-  </React.Fragment>
-);
+export const secondaryListItems = [
+  {
+    text: "Anadir tarea",
+    icon: <DashboardIcon />,
+    href: basePath + "/dashboard",
+  },
+  {
+    text: "Editar tarea",
+    icon: <AssignmentIcon />,
+    href: basePath + "/tasks/management",
+  },
+  { text: "Borrar Tarea", icon: <SavingsIcon />, href: basePath + "/finances" },
+  {
+    text: "Alimentación",
+    icon: <LocalDiningIcon />,
+    href: basePath + "/nutrition",
+  },
+];

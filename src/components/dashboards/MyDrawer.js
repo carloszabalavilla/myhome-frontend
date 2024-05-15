@@ -85,7 +85,6 @@ export default function MyDrawer({ open, toggleDrawer }) {
           <ChevronLeftIcon />
         </IconButton>
       </Toolbar>
-      <Divider />
       <MyList />
     </Drawer>
   );
@@ -94,6 +93,7 @@ export default function MyDrawer({ open, toggleDrawer }) {
 function MyList() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [showSecondary, setShowSecondary] = React.useState(false);
 
   return (
     <List component="nav">
@@ -134,7 +134,6 @@ function MyList() {
         </ListItem>
       ))}
       <Divider sx={{ my: 1 }} />
-      {/* {secondaryListItems} */}
     </List>
   );
 }

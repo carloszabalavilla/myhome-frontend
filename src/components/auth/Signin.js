@@ -13,10 +13,19 @@ import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useTheme } from "@mui/material/styles";
-import UserLogin from "../../services/AuthService";
+import UserLogin, { ResendConfirmation } from "../../services/AuthService";
 import { useUser } from "../../contexts/UserContext";
 import SignInIcons from "./SigninIcons";
 import GoBack from "../common/GoBack";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from "@mui/material";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -28,15 +37,28 @@ function SignIn() {
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [sendConfLink, setSendConfLink] = React.useState(false);
 
   const handleSubmit = async () => {
-    var user = await UserLogin(email, password,setMessage);
+    let user = await UserLogin(email, password, setMessage, setSendConfLink);
     if (user !== null) {
       setUser(user);
+      localStorage.setItem("user", JSON.stringify(user));
       navigate("/user/dashboard");
     } else {
       setShowError(true);
     }
+  };
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleResendConfirmation = async () => {
+    await ResendConfirmation(email, setMessage);
   };
 
   return (
@@ -78,31 +100,61 @@ function SignIn() {
               sx={{
                 ":hover": {
                   transition: "all 0.2s",
-                  transform: "scale(1.05)",
+                  transform: "scale(1.02)",
                 },
               }}
             />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
+            <FormControl
               fullWidth
-              name="password"
-              label="Contraseña"
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
+              required
+              autoFocus
+              variant="outlined"
               sx={{
                 ":hover": {
                   transition: "all 0.2s",
-                  transform: "scale(1.05)",
+                  transform: "scale(1.02)",
                 },
+                mb: 2,
               }}
-            />
-            {showError && (
-              <Alert severity="error">{message}</Alert>
+            >
+              <InputLabel htmlFor="outlined-adornment-password">
+                Contraseña
+              </InputLabel>
+              <OutlinedInput
+                id="password1"
+                label="Password"
+                name="password1"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            {showError && <Alert severity="error">{message}</Alert>}
+            {sendConfLink && (
+              <Link
+                mt={2}
+                onClick={handleResendConfirmation}
+                sx={{
+                  ":hover": {
+                    transition: "all 0.2s",
+                    transform: "scale(1.05)",
+                  },
+                }}
+              >
+                Enviar enlace de confirmación
+              </Link>
             )}
             <Grid container justifyContent="space-between" alignItems="center">
               <Grid item>
@@ -155,7 +207,7 @@ function SignIn() {
             >
               Iniciar sesión
             </Button>
-            <Container >
+            <Container>
               <Link
                 href="/auth/register"
                 sx={{

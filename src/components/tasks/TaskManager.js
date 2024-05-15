@@ -1,16 +1,23 @@
+import Box from '@mui/material/Box';
 import React from 'react';
-import Breadcrumb from './BreadCrumb';
+import MyAppBar from '../dashboards/MyAppBar';
+import MyDrawer from '../dashboards/MyDrawer';
 
 function TaskManager() {
     console.log("Redirigiendo a la página de usuario de tareas.");
+    const [open, setOpen] = React.useState(false);
 
+    const toggleDrawer = () => {
+      setOpen(!open);
+    };
     return (
-        <div className='container mt-4'>
-        <Breadcrumb/>
-            <div className=''>
-                
-            </div>
-        </div>
+        <Box>
+                  <MyAppBar open={open} />
+                  <Box sx={{ display: "flex" }}>
+                  <MyDrawer open={open} toggleDrawer={toggleDrawer} />
+
+                </Box>
+        </Box>
     );
 }
 export default TaskManager;

@@ -1,114 +1,119 @@
-async function UserLogin(email, password, setMessage) {
+import axios from "../contexts/AxiosInstance";
+
+const serviceURL = "/auth";
+
+async function UserLogin(email, password, setMessage, setSendConfLink) {
   console.log("Iniciando inicio de sesión: ", email);
 
   try {
-    const response = await fetch("http://localhost:8081/api/auth/login", {
+    const response = await axios.post(`${serviceURL}/login`, {
+      email,
+      password,
+    });
+    console.log("Respuesta del servidor: ", response.data);
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 403) {
+      setSendConfLink(true);
+    }
+    console.error("Error: ", error);
+    setMessage(error.response.data.message);
+    return null;
+  }
+}
+
+async function RecoveryPassword(email, setMessage) {
+  console.log("Iniciando recuperacion de email: ", email);
+
+  try {
+    const response = await axios.get(
+      `${serviceURL}/recovery-password/${email}`
+    );
+    console.log("Respuesta del servidor: ", response.data);
+    console.log("Mensaje del servidor: ", response.data.message);
+
+    return response.data.message;
+  } catch (error) {
+    console.error("Error: ", error);
+    setMessage(error.response.data.message);
+    return null;
+  }
+}
+
+async function ChangePassword(email, password, password2, setMessage) {
+  console.log("Iniciando cambio de contraseña");
+  if (password !== password2) {
+    setMessage("Las contraseñas no coinciden");
+    return null;
+  }
+
+  try {
+    const response = await axios.put(`${serviceURL}/reset-password`, {
+      email,
+      password,
+    });
+    console.log("Respuesta del servidor: ", response.data);
+    return response.data.message;
+  } catch (error) {
+    console.error("Error: ", error);
+    setMessage(error.response.data.message);
+    return null;
+  }
+}
+
+async function NewUser(email, password) {
+  console.log("Iniciando creacion de usuario: ", email);
+
+  try {
+    const response = await fetch("http://localhost:8081/api/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      mode: "cors",
       body: JSON.stringify({
         email: email,
         password: password,
       }),
     });
-    const data = await response.json();
     console.log("Respuesta del servidor: ", response);
     if (response.ok) {
-      return data;
+      console.log("Registro correcto");
+      const data = await response.json();
+      if (data === null) {
+        console.error("Email ya registrado");
+        return null;
+      } else {
+        console.log("Usuario registrado: ", data);
+        return data;
+      }
     } else {
-      console.log("message" + response);
-      setMessage(response.body);
-      return null;
+      console.error("Error en el registro");
+      return "registerError";
     }
   } catch (error) {
     console.error("Error: ", error);
-    setMessage(response);
-    return null;
+    return "registerError";
   }
 }
 
-async function ApiLogin(id, token) {
-  console.log("Iniciando inicio de sesión en la api: ", id);
-  return fetch("http://localhost:8081/auth/user/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      id: id,
-      token: token,
-    }),
-  })
-    .then((response) => {
-      if (response.ok) {
-        console.log("Cliente autenticado en la api");
-      } else {
-        console.error("El cliente no se ha podido autenticar en la api");
-      }
-    })
-    .catch((error) => {
-      console.error("Error al autenticar el cliente con la api:", error);
-    });
-}
+async function ResendConfirmation(email, setMessage) {
+  console.log("Iniciando inicio de sesión: ", email);
 
-function PasswordRecovery(email) {
-  console.log("Iniciando recuperacion de email: ", email);
-
-  return fetch("http://localhost:8081/auth/user/password", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-    }),
-  })
-    .then((response) => {
-      if (response.ok) {
-        alert("Se ha enviado un correo para recuperar la contraseña");
-      } else {
-        alert("No se ha podido enviar el correo para recuperar la contraseña");
-      }
-    })
-    .catch((error) => {
-      console.error(
-        "Error al enviar el correo para recuperar la contraseña:",
-        error
-      );
-      alert("Error al enviar el correo para recuperar la contraseña");
-    });
-}
-
-function PasswordChange(password, password2) {
-  console.log("Iniciando cambio de contraseña");
-  if (password !== password2) {
-    alert("Las contraseñas no coinciden");
-    return;
+  try {
+    const response = await axios.post(
+      `${serviceURL}/resend-confirmation?email=${email}`,
+      {}
+    );
+    console.log("Respuesta del servidor: ", response.data);
+  } catch (error) {
+    console.error("Error: ", error);
+    setMessage(error.response.data.message);
   }
-
-  return fetch("http://localhost:8081/auth/user/password", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      password: password,
-    }),
-  })
-    .then((response) => {
-      if (response.ok) {
-        alert("Contraseña cambiada correctamente");
-      } else {
-        alert("No se ha podido cambiar la contraseña");
-      }
-    })
-    .catch((error) => {
-      console.error("Error al cambiar la contraseña:", error);
-      alert("Error al cambiar la contraseña");
-    });
 }
+
 export default UserLogin;
-export { ApiLogin };
-export { PasswordRecovery };
-export { PasswordChange };
+export { ResendConfirmation };
+export { NewUser };
+export { RecoveryPassword };
+export { ChangePassword };
