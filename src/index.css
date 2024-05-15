@@ -1,13 +1,26 @@
+html,
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Roboto, Helvetica, Arial,
-    sans-serif;
+  padding: 0;
+  height: 100%;
+  font-family: "Montserrat", "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica",
+    "Arial", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* Color base: 90caf9
+Color secondary: ffcc80
+https://m2.material.io/inline-tools/color/
+https://zenoo.github.io/mui-theme-creator/#List
+*/
+
+.dashboard-button:focus {
+  background-color: transparent !important;
 }
