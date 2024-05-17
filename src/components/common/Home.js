@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Unstable_Grid2";
 import {
   Typography,
@@ -14,7 +15,12 @@ import Footer from "./Footer";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 
 function Home() {
-  console.log("Redirigiendo a la página de inicio.");
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (localStorage.getItem("user") !== null) {
+      navigate("/user/dashboard");
+    }
+  });
   return (
     <Container>
       <Grid container spacing={6} mt={8}>

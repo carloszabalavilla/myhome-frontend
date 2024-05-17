@@ -1,7 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 import { blue, orange } from "@mui/material/colors";
 
-const lightTheme = createTheme({
+export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
@@ -19,7 +19,7 @@ const lightTheme = createTheme({
   },
 });
 
-const darkTheme = createTheme({
+export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
@@ -36,5 +36,3 @@ const darkTheme = createTheme({
     fontFamily: "Montserrat",
   },
 });
-
-export { lightTheme, darkTheme };

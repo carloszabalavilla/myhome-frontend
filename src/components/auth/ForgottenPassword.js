@@ -10,7 +10,7 @@ import Alert from "@mui/material/Alert";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useTheme } from "@mui/material/styles";
 import { RecoveryPassword } from "../../services/AuthService";
-import GoBack from "../common/GoBack";
+import GoBack from "../custom/GoBack";
 
 
 

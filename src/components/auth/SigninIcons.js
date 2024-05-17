@@ -7,43 +7,24 @@ import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 export default function SignInIcons() {
-  const secColor = useTheme().palette.secondary.main;
+  const buttonSx = {
+    transition: "all 0.5s",
+    ":hover": {
+      color: useTheme().palette.secondary.main,
+      backgroundColor: "transparent",
+      transform: "scale(1.3)",
+    },
+  };
+
   return (
     <Box align="center">
-      <Button
-        sx={{
-          ":hover": {
-            color: secColor,
-            backgroundColor: "transparent",
-            transition: "all 0.2s",
-            transform: "scale(1.1)",
-          },
-        }}
-      >
+      <Button sx={buttonSx}>
         <FacebookIcon />
       </Button>
-      <Button
-        sx={{
-          ":hover": {
-            color: secColor,
-            backgroundColor: "transparent",
-            transition: "all 0.2s",
-            transform: "scale(1.1)",
-          },
-        }}
-      >
+      <Button sx={buttonSx}>
         <GoogleIcon />
       </Button>
-      <Button
-        sx={{
-          ":hover": {
-            color: secColor,
-            backgroundColor: "transparent",
-            transition: "all 0.2s",
-            transform: "scale(1.1)",
-          },
-        }}
-      >
+      <Button sx={buttonSx}>
         <XIcon />
       </Button>
     </Box>

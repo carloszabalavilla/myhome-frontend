@@ -1,14 +1,15 @@
 import React, { useContext } from "react";
-import { ColorModeContext } from "../../contexts/ColorModeContext";
+//import { ColorModeContext } from "../../contexts/ColorModeContext";
+import { ThemeContext } from "../../contexts/ThemeContext";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 
 export default function DarkModeSwitch() {
-  const { toggleColorMode } = useContext(ColorModeContext);
+  const { toggleTheme } = useContext(ThemeContext);
 
   return (
     <MaterialUISwitch
-      onChange={toggleColorMode}
+      onChange={toggleTheme}
       sx={{
         marginLeft: 2,
         marginTop: 0.5, // Alinear a la derecha del contenedor

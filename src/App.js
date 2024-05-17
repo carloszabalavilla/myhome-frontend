@@ -1,43 +1,31 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/common/AppBar";
-import Home from "./components/common/Home";
-import Login from "./components/auth/Signin";
-import Dashboard from "./components/dashboards/Dashboard";
-import TaskManager from "./components/tasks/TaskManager";
-import Register from "./components/auth/Register";
-import ForgottenPassword from "./components/auth/ForgottenPassword";
-import ResetPassword from "./components/auth/ResetPassword";
+import routes from "./routes/routes";
 import { UserProvider } from "./contexts/UserContext";
 import { CssBaseline } from "@mui/material";
-import ToggleColorMode from "./components/theme/ToggleColorMode";
+//import ToggleColorMode from "./styles/theme/ToggleColorMode";
 import "@fontsource/montserrat";
 import "@fontsource/lato";
+import { ThemeProviderComponent } from "./contexts/ThemeContext";
 
 function App() {
   console.log("Inicio del cliente.");
 
   return (
-    <ToggleColorMode>
+    <ThemeProviderComponent>
       <CssBaseline />
       <UserProvider>
         <Router>
           <Navbar />
           <Routes>
-            <Route index element={<Home />} />
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/user/dashboard" element={<Dashboard />} />
-            <Route path="/user/tasks/management" element={<TaskManager />} />
-            <Route path="/auth/register" element={<Register />} />
-            <Route
-              path="/auth/forgot-password"
-              element={<ForgottenPassword />}
-            />
-            <Route path="/auth/reset-password" element={<ResetPassword />} />
+            {routes.map(({ path, element, index }) => (
+              <Route key={path} path={path} element={element} index={index} />
+            ))}
           </Routes>
         </Router>
       </UserProvider>
-    </ToggleColorMode>
+    </ThemeProviderComponent>
   );
 }
 

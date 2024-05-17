@@ -7,8 +7,8 @@ import Paper from "@mui/material/Paper";
 import Chart from "./Chart";
 import Deposits from "./Deposits";
 import Orders from "./Orders";
-import MyAppBar from "./MyAppBar";
-import MyDrawer from "./MyDrawer";
+import LoggedInAppBar from "../custom/LoggedInAppBar";
+import MyDrawer from "../custom/MyDrawer";
 
 export default function Dashboard() {
   const [open, setOpen] = React.useState(false);
@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   return (
     <Box>
-      <MyAppBar open={open} />
+      <LoggedInAppBar open={open} />
       <Box sx={{ display: "flex" }}>
         <MyDrawer open={open} toggleDrawer={toggleDrawer} />
         <Box

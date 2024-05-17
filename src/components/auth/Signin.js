@@ -1,54 +1,82 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useTheme } from "@mui/material/styles";
-import UserLogin, { ResendConfirmation } from "../../services/AuthService";
-import { useUser } from "../../contexts/UserContext";
-import SignInIcons from "./SigninIcons";
-import GoBack from "../common/GoBack";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
+import { SAvatar, SBox, SContainer } from "../../styles/StyledComponents";
 import {
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-} from "@mui/material";
+  CEmailInput,
+  CPasswordInput,
+  CSubmitButton,
+} from "../custom/CustomComponents";
+import SignInIcons from "./SigninIcons";
+import GoBack from "../custom/GoBack";
+import { UserLogin, ResendConfirmation } from "../../services/AuthService";
+import { UserContext } from "../../contexts/UserContext";
 
 function SignIn() {
   const navigate = useNavigate();
-  const primColor = useTheme().palette.primary.main;
-  const secColor = useTheme().palette.secondary.main;
+  const { login } = useContext(UserContext);
 
-  const { setUser } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showError, setShowError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [sendConfLink, setSendConfLink] = React.useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const [sendConfLink, setSendConfLink] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("user") !== null) {
+      navigate("/user/dashboard");
+    }
+  });
 
   const handleSubmit = async () => {
-    let user = await UserLogin(email, password, setMessage, setSendConfLink);
-    if (user !== null) {
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
-      navigate("/user/dashboard");
-    } else {
-      setShowError(true);
+    setSuccess(false);
+    setLoading(true);
+    try {
+      const user = await UserLogin(email, password);
+      console.log("Usuario: ", user);
+      login(user);
+      setLoading(false);
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/user/dashboard");
+      }, 2000);
+      console.log(localStorage.getItem("user"));
+    } catch (error) {
+      if (error.response.status === 403) {
+        setSendConfLink(true);
+      }
+      handleShowAlert(error.response.data.message);
     }
+  };
+
+  const handleResendConfirmation = async () => {
+    try {
+      const response = await ResendConfirmation(email, setMessage);
+      handleShowAlert(response.data.message, "success");
+    } catch (error) {
+      handleShowAlert(error.response.data.message);
+    }
+  };
+
+  const handleShowAlert = (message, severity = "error") => {
+    setSeverity(severity);
+    setMessage(message);
+    setLoading(false);
+    setShowAlert(true);
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -57,175 +85,82 @@ function SignIn() {
     event.preventDefault();
   };
 
-  const handleResendConfirmation = async () => {
-    await ResendConfirmation(email, setMessage);
+  const sx = {
+    transition: "all 0.2s",
+    "&:hover": {
+      transform: "scale(1.05)",
+    },
   };
 
   return (
-    <Container sx={{ mt: 3 }}>
+    <SContainer>
       <GoBack display={"flex"} justifyContent={"left"} />
-      <Container sx={{ scale: "1.02" }}>
-        <Box
-          sx={{
-            mt: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar
-            sx={{
-              m: 1,
-              bgcolor: primColor,
-              ":hover": { bgcolor: secColor, transition: "all 0.2s" },
-            }}
+      <SBox>
+        <SAvatar>
+          <LockOutlinedIcon />
+        </SAvatar>
+        <Typography component="h1" variant="h5">
+          Inicio de sesión
+        </Typography>
+        <Box>
+          <CEmailInput email={email} setEmail={setEmail} />
+          <CPasswordInput
+            password={password}
+            setPassword={setPassword}
+            showPassword={showPassword}
+            handleClickShowPassword={handleClickShowPassword}
+            handleMouseDownPassword={handleMouseDownPassword}
+          />
+          <Box
+            my
+            //sx={{
+            //  transition: "all 0.4s",
+            //  transform: "rotateY(180deg)",
+            //}}
           >
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Inicio de sesión
-          </Typography>
-          <Box noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Correo electrónico"
-              name="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoFocus
-              sx={{
-                ":hover": {
-                  transition: "all 0.2s",
-                  transform: "scale(1.02)",
-                },
-              }}
-            />
-            <FormControl
-              fullWidth
-              required
-              autoFocus
-              variant="outlined"
-              sx={{
-                ":hover": {
-                  transition: "all 0.2s",
-                  transform: "scale(1.02)",
-                },
-                mb: 2,
-              }}
-            >
-              <InputLabel htmlFor="outlined-adornment-password">
-                Contraseña
-              </InputLabel>
-              <OutlinedInput
-                id="password1"
-                label="Password"
-                name="password1"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-            {showError && <Alert severity="error">{message}</Alert>}
-            {sendConfLink && (
-              <Link
-                mt={2}
-                onClick={handleResendConfirmation}
-                sx={{
-                  ":hover": {
-                    transition: "all 0.2s",
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
-                Enviar enlace de confirmación
-              </Link>
-            )}
-            <Grid container justifyContent="space-between" alignItems="center">
-              <Grid item>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      value="remember"
-                      color="secondary"
-                      sx={{
-                        ":hover": {
-                          transition: "all 0.2s",
-                          transform: "scale(1.1)",
-                        },
-                      }}
-                    />
-                  }
-                  label="Recuérdame"
-                />
-              </Grid>
-              <Grid item>
-                <Grid container alignItems="center">
-                  <Link
-                    href="/auth/forgot-password"
-                    sx={{
-                      ":hover": {
-                        transition: "all 0.2s",
-                        transform: "scale(1.05)",
-                      },
-                    }}
-                  >
-                    ¿Olvidó la contraseña?
+            {showAlert && (
+              <Alert cursor="none" severity={severity}>
+                {message}{" "}
+                {sendConfLink && (
+                  <Link onClick={handleResendConfirmation} sx={sx}>
+                    Reenviar enlace de confirmación?
                   </Link>
-                </Grid>
+                )}
+              </Alert>
+            )}
+          </Box>
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Grid item>
+              <FormControlLabel
+                sx={sx}
+                control={<Checkbox value="remember" color="secondary" />}
+                label="Recuérdame"
+              />
+            </Grid>
+            <Grid item>
+              <Grid container alignItems="center">
+                <Link href="/auth/forgot-password" sx={sx}>
+                  ¿Olvidó la contraseña?
+                </Link>
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              onClick={handleSubmit}
-              sx={{
-                mt: 3,
-                mb: 2,
-                ":hover": {
-                  transition: "all 0.2s",
-                  transform: "scale(1.05)",
-                },
-              }}
-              disabled={!email || !password}
-            >
-              Iniciar sesión
-            </Button>
-            <Container>
-              <Link
-                href="/auth/register"
-                sx={{
-                  ":hover": {
-                    transition: "all 0.2s",
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
-                ¿No tienes una cuenta? Regístrate
-              </Link>
-              <Typography my>O inicia sesión con:</Typography>
-              <SignInIcons />
-            </Container>
-          </Box>
+          </Grid>
+          <CSubmitButton
+            handleSubmit={handleSubmit}
+            success={success}
+            buttonText={"Iniciar sesion"}
+            loading={loading}
+          />
         </Box>
-      </Container>
-    </Container>
+        <SBox>
+          <Link href="/auth/register" sx={sx}>
+            ¿No tienes una cuenta? Regístrate
+          </Link>
+          <Typography>O inicia sesión con:</Typography>
+          <SignInIcons />
+        </SBox>
+      </SBox>
+    </SContainer>
   );
 }
 

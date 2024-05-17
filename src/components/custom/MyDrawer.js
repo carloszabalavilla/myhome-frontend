@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // Asumiendo que estás usando React Router
 import { styled } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
@@ -7,7 +7,7 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { mainListItems, secondaryListItems } from "./listItems";
+import { mainListItems, secondaryListItems } from "../dashboards/listItems";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -93,7 +93,7 @@ export default function MyDrawer({ open, toggleDrawer }) {
 function MyList() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [showSecondary, setShowSecondary] = React.useState(false);
+  const [showSecondary, setShowSecondary] = useState(false);
 
   return (
     <List component="nav">
