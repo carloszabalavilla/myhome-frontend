@@ -1,90 +1,80 @@
-import axios from "../contexts/AxiosInstance";
+import axios from "./AxiosInstance";
 
 const serviceURL = "/auth";
 
-export async function NewUser(email, password, setMessage) {
-  console.log("Iniciando creacion de usuario: ", email);
+export async function NewUser(userData) {
+  console.log("Iniciando creacion de usuario: ", userData.email);
 
   try {
-    const response = await axios.post(`${serviceURL}/register`, {
-      email,
-      password,
-    });
+    const response = await axios.post(`${serviceURL}/register`, userData);
     console.log(" Mensaje de respuesta del servidor: ", response.data.message);
-    setMessage(response.data.message);
     return response.data;
   } catch (error) {
     console.error("Error: ", error);
-    setMessage(error.response.data.message);
     return null;
   }
 }
 
-export async function UserLogin(email, password) {
-  console.log("Iniciando servicio de login");
+export async function UserLogin(loginRequest) {
   try {
-    const response = await axios.post(`${serviceURL}/login`, {
-      email,
-      password,
-    });
-    console.log("Respuesta del servidor: ", response.data);
+    const response = await axios.post(`${serviceURL}/login`, loginRequest);
     return response.data;
   } catch (error) {
-    console.log("Error: ", error);
     throw error;
   }
 }
 
-export async function RecoveryPassword(email, setMessage) {
-  console.log("Iniciando recuperacion de email: ", email);
-
+export async function StartRecovery(email) {
   try {
     const response = await axios.get(
-      `${serviceURL}/recovery-password/${email}`
+      `${serviceURL}/recovery-password/start/${email}`
     );
-    console.log("Respuesta del servidor: ", response.data);
-    console.log("Mensaje del servidor: ", response.data.message);
-
     return response.data.message;
   } catch (error) {
     console.error("Error: ", error);
-    setMessage(error.response.data.message);
-    return null;
+    throw error;
   }
 }
 
-export async function ChangePassword(email, password, password2, setMessage) {
-  console.log("Iniciando cambio de contraseña");
-  if (password !== password2) {
-    setMessage("Las contraseñas no coinciden");
-    return null;
-  }
-
+export async function LetRecoveryPassword(jwt) {
   try {
-    const response = await axios.put(`${serviceURL}/reset-password`, {
-      email,
-      password,
+    const response = await axios.get(`${serviceURL}/recovery-password/let`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
     });
-    console.log("Respuesta del servidor: ", response.data);
-    return response.data.message;
+    return response.data;
   } catch (error) {
     console.error("Error: ", error);
-    setMessage(error.response.data.message);
-    return null;
+    throw error;
   }
 }
 
-export async function ResendConfirmation(email, setMessage) {
-  console.log("Iniciando inicio de sesión: ", email);
-
+export async function ChangePassword(jwt, resetRequest) {
   try {
     const response = await axios.post(
-      `${serviceURL}/resend-confirmation?email=${email}`,
-      {}
+      `${serviceURL}/recovery-password/change`,
+      resetRequest,
+      {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      }
     );
     console.log("Respuesta del servidor: ", response.data);
   } catch (error) {
     console.error("Error: ", error);
-    setMessage(error.response.data.message);
+    throw error;
+  }
+}
+
+export async function ResendConfirmation(email) {
+  try {
+    const response = await axios.get(
+      `${serviceURL}/resend-confirmation/${email}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
   }
 }

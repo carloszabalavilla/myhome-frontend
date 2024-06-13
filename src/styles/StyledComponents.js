@@ -1,11 +1,23 @@
 import { styled } from "@mui/system";
-import { Container, Box, FormControl, TextField, Avatar } from "@mui/material";
+import { Container, Box, FormControl, TextField, Avatar, Paper } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import MuiAppBar from "@mui/material/AppBar";
+import MuiDrawer from "@mui/material/Drawer";
+
 
 /* Containers */
 export const SContainer = styled(Container)(({ theme }) => ({
   minHeight: "100vh",
+}));
+
+export const SCenteredContainer = styled(Container)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  maxWidth: "lg",
+  height: "100vh",
+  backgroundColor: theme.palette.background.default,
+  padding: theme.spacing(2),
 }));
 
 export const SBox = styled(Box)(({ theme }) => ({
@@ -15,7 +27,16 @@ export const SBox = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   textAlign: "center",
+}));
+
+export const SPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[3],
+  backgroundColor: theme.palette.background.paper,
   height: "100%",
+  maxWidth: '800px',
+  margin: 'auto',
 }));
 
 /* Forms */
@@ -63,4 +84,30 @@ export const SAppBar = styled(MuiAppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
+}));
+
+export const SDrawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  "& .MuiDrawer-paper": {
+    position: "relative",
+    whiteSpace: "nowrap",
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    boxSizing: "border-box",
+    ...(!open && {
+      overflowX: "hidden",
+      transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      width: theme.spacing(7),
+      [theme.breakpoints.up("sm")]: {
+        width: theme.spacing(9),
+      },
+    }),
+  },
 }));

@@ -8,19 +8,19 @@ export const ThemeProviderComponent = ({ children }) => {
   const [theme, setTheme] = useState(lightTheme);
 
   useEffect(() => {
-    const userThemePreference = localStorage.getItem('theme');
+    const userThemePreference = sessionStorage.getItem('theme');
     if (userThemePreference) {
       setTheme(userThemePreference === 'dark' ? darkTheme : lightTheme);
     } else {
       const hour = new Date().getHours();
-      setTheme(hour >= 18 || hour <= 6 ? darkTheme : lightTheme);
+      setTheme(hour >= 20 || hour <= 7 ? darkTheme : lightTheme);
     }
   }, []);
 
   const toggleTheme = () => {
     const newTheme = theme.palette.mode === 'light' ? darkTheme : lightTheme;
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme.palette.mode);
+    sessionStorage.setItem('theme', newTheme.palette.mode);
   };
 
   return (
@@ -31,3 +31,5 @@ export const ThemeProviderComponent = ({ children }) => {
     </ThemeContext.Provider>
   );
 };
+
+export const useTheme = () => React.useContext(ThemeContext);

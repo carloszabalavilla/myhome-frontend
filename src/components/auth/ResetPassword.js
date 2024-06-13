@@ -1,190 +1,146 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { ChangePassword } from "../../services/AuthService";
-import GetUserByToken from "../../services/UserService";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSnackBar } from "../../contexts/SnackBarContext";
+import { Formik, Form } from "formik";
 import {
-  Alert,
-  Avatar,
-  Box,
-  Button,
-  Container,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Typography,
-} from "@mui/material";
-import { useLocation } from 'react-router-dom';
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import { useTheme } from "@mui/material/styles";
+  SBox,
+  SAvatar,
+  SCenteredContainer,
+} from "../../styles/StyledComponents";
+import { Typography, Skeleton, Box, Collapse, Alert } from "@mui/material";
+import { resetPasswordFormModel as formModel } from "../formModel/formModel";
+import { resetInitialValues } from "../formModel/initialValues";
+import { resetPasswordValidationSchema } from "../formModel/validationSchema";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { CPasswordInput, CSubmitButton } from "../custom/CustomComponents";
+import { ChangePassword } from "../../services/AuthService";
 
-function ResetPassword() {
-  console.log("Pagina del login iniciando.");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [showPassword, setShowPassword] = React.useState(false);
-  const navigate = useNavigate();
-  const primColor = useTheme().palette.primary.main;
-  const secColor = useTheme().palette.secondary.main;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+export default function ResetPassword() {
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const token = searchParams.get('token');  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+  const { handleOpen, setMessage, setSeverity } = useSnackBar();
+  const [userEmail, setUserEmail] = useState("");
+  const [success, setSuccess] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [severity, setSeverity] = useState("success");
+  const [isLoading, setIsLoading] = useState(true);
+  const [message, setAlertMessage] = useState("");
+  const [severity, setAlertSeverity] = useState("error");
+  const [jwt, setJwt] = useState("");
 
   useEffect(() => {
-    console.log("Token: ", token);
-    const fetchData = async () => {
-      const user = await GetUserByToken(token);
-      if (user === null) {
-        alert("El token no es válido.");
-      }
-      setEmail(user.email);
-    };
-    fetchData();
-  }, [token]);
+    const query = new URLSearchParams(location.search);
+    const email = query.get("email");
+    const token = query.get("token");
 
-  const handleSubmit = async () => {
-    setMessage(await ChangePassword(email, password, password2, setMessage));
-    if (message === null) {
+    sleep(1000).then(() => setIsLoading(false));
+
+    if (email && token) {
+      setUserEmail(decode(email));
+      setJwt(decode(token));
+    } else {
+      setMessage("El token no es valido");
       setSeverity("error");
+      handleOpen();
+      navigate("/error/unauthorized");
     }
+  }, [location, navigate, handleOpen, setMessage, setSeverity]);
+
+  async function _handleSubmit(values, actions) {
+    try {
+      actions.setSubmitting(true);
+      const { resetPassword } = values;
+      const resetRequest = {
+        email: userEmail,
+        password: resetPassword,
+      };
+      console.log(resetRequest);
+      ChangePassword(jwt, resetRequest);
+      actions.setSubmitting(false);
+      setSuccess(true);
+      _handleShowAlert("Contraseña cambiada", "success");
+      handleOpen();
+      sleep(1000).then(() => navigate("/auth/login"));
+    } catch (error) {
+      _handleShowAlert("Ha ocurrido un error", "error");
+    } finally {
+      actions.setSubmitting(false);
+    }
+  }
+
+  function _handleShowAlert(message, severity) {
+    setAlertSeverity(severity);
+    setAlertMessage(message);
     setShowAlert(true);
-  };
+  }
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  function decode(data) {
+    return atob(data);
+  }
 
   return (
-    <Container sx={{ mt: 3 }} maxWidth="md">
-      <Container sx={{ scale: "1.02" }}>
-        <Box
-          sx={{
-            mt: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar
-            sx={{
-              m: 1,
-              bgcolor: primColor,
-              ":hover": { bgcolor: secColor, transition: "all 0.2s" },
-            }}
-          >
-            <LockOpenIcon />
-          </Avatar>
-          <Typography m component="h1" variant="h5">
-            Restablecer la contraseña
-          </Typography>
-          <FormControl
-            fullWidth
-            required
-            autoFocus
-            variant="outlined"
-            sx={{
-              ":hover": {
-                transition: "all 0.2s",
-                transform: "scale(1.02)",
-              },
-              mb: 2,
-            }}
-          >
-            <InputLabel htmlFor="outlined-adornment-password">
-              Contraseña
-            </InputLabel>
-            <OutlinedInput
-              id="password1"
-              label="Password"
-              name="password1"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-          <FormControl
-            fullWidth
-            required
-            variant="outlined"
-            sx={{
-              ":hover": {
-                transition: "all 0.2s",
-                transform: "scale(1.02)",
-              },
-              mb: 2,
-            }}
-          >
-            <InputLabel htmlFor="outlined-adornment-password">
-              Repita la contraseña
-            </InputLabel>
-            <OutlinedInput
-              id="password2"
-              name="password2"
-              type={showPassword ? "text" : "password"}
-              value={password2}
-              onChange={(e) => setPassword2(e.target.value)}
-              autoFocus
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Password"
-            />
-          </FormControl>
-          {showAlert && (
-            <Alert severity={severity} sx={{ m: 1 }}>
-              {message}
-            </Alert>
+    <SCenteredContainer>
+      <SBox sx={{ scale: "1.02" }}>
+        <SAvatar>
+          {isLoading ? (
+            <Skeleton variant="circular" width={40} height={40} />
+          ) : (
+            <LockOutlinedIcon />
           )}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            onClick={handleSubmit}
-            sx={{
-              m: 1,
-              ":hover": {
-                transition: "all 0.2s",
-                transform: "scale(1.02)",
-              },
-            }}
-            disabled={!password || !password2}
-          >
-            Restablecer contraseña
-          </Button>
-        </Box>
-      </Container>{" "}
-    </Container>
+        </SAvatar>
+        <Typography component="h1" variant="h5">
+          {isLoading ? <Skeleton width={210} /> : "Cambio de contraseña"}
+        </Typography>
+        <Formik
+          initialValues={resetInitialValues}
+          onSubmit={_handleSubmit}
+          validationSchema={resetPasswordValidationSchema}
+        >
+          {({ isSubmitting, values }) => (
+            <Form>
+              <Box>
+                {isLoading ? (
+                  <Skeleton variant="rectangular" width="100%" height={56} />
+                ) : (
+                  <CPasswordInput
+                    id={"resetPassword"}
+                    field={formModel.formField.resetPassword}
+                  />
+                )}
+                {isLoading ? (
+                  <Skeleton variant="rectangular" width="100%" height={56} />
+                ) : (
+                  <CPasswordInput
+                    id={"resetPassword2"}
+                    field={formModel.formField.resetPassword2}
+                  />
+                )}
+                <Box my>
+                  <Collapse in={showAlert}>
+                    <Alert cursor="none" severity={severity}>
+                      {message}
+                    </Alert>
+                  </Collapse>
+                </Box>
+                {isLoading ? (
+                  <Skeleton variant="rectangular" width="100%" height={56} />
+                ) : (
+                  <CSubmitButton
+                    success={success}
+                    buttonText={"Cambiar contraseña"}
+                    disablingFields={
+                      !values[formModel.formField.resetPassword.name] ||
+                      !values[formModel.formField.resetPassword2.name]
+                    }
+                    isSubmitting={isSubmitting}
+                  />
+                )}
+              </Box>
+            </Form>
+          )}
+        </Formik>
+      </SBox>
+    </SCenteredContainer>
   );
 }
-
-export default ResetPassword;

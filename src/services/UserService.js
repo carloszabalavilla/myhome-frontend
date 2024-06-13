@@ -1,12 +1,21 @@
-import axios from "../contexts/AxiosInstance";
+import axios from "./AxiosInstance";
 
 const serviceURL = "/user";
 
-export default async function GetUserByToken(token) {
+export async function CheckEmail(email) {
   try {
-    const response = await axios.get(
-      `${serviceURL}/token?token=${token}`
-    );
+    const response = await axios.get(`${serviceURL}/check/${email}`);
+    console.log("Respuesta del servidor: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error: ", error);
+    return null;
+  }
+}
+
+export async function GetUserByEmail(email) {
+  try {
+    const response = await axios.get(`${serviceURL}/email?email=${email}`);
     console.log("Respuesta del servidor: ", response.data);
     return response.data;
   } catch (error) {

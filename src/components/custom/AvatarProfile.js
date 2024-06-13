@@ -11,23 +11,18 @@ import { useTheme } from "@mui/material/styles";
 import { Divider } from "@mui/material";
 import { useUser } from "../../contexts/UserContext";
 
-const settings = ["Perfil", "Cuenta", "Configuracion", "Salir"];
+const options = ["Perfil", "Cuenta", "Configuracion", "Salir"];
 
 export default function AvatarProfile() {
-  const { logout } = useUser();
+  const { user, logout } = useUser();
   const navigate = useNavigate();
-
-  const user = useUser().user;
-  console.log("Usuario: ", user);
-  const username = user.name;
-  const firstLetter = username.charAt(0);
-
+  const firstLetter = user.firstName.charAt(0).toUpperCase() + user.lastName.charAt(0).toUpperCase();
+  const username = user.firstName.charAt(0).toUpperCase() + firstLetter.slice(1);
   const secColor = useTheme().palette.secondary.main;
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleItemClick = (action) => {
-    // Aquí puedes definir la lógica para cada acción
     switch (action) {
       case "Cuenta":
         console.log("Ir a la cuenta");
@@ -35,7 +30,7 @@ export default function AvatarProfile() {
         break;
       case "Perfil":
         console.log("Ir al perfil");
-        navigate("/user/settings");
+        navigate("/user/profile");
         break;
       case "Configuracion":
         console.log("Ir a la configuración");
@@ -87,9 +82,9 @@ export default function AvatarProfile() {
           <Typography textAlign="center">{username}</Typography>
         </MenuItem>
         <Divider />
-        {settings.map((setting) => (
-          <MenuItem key={setting} onClick={() => handleItemClick(setting)}>
-            <Typography textAlign="center">{setting}</Typography>
+        {options.map((option) => (
+          <MenuItem key={option} onClick={() => handleItemClick(option)}>
+            <Typography textAlign="center">{option}</Typography>
           </MenuItem>
         ))}
       </Menu>

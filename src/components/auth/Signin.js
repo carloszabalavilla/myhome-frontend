@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Formik, Form } from "formik";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
@@ -10,80 +11,96 @@ import Alert from "@mui/material/Alert";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { SAvatar, SBox, SContainer } from "../../styles/StyledComponents";
 import {
-  CEmailInput,
+  CFieldInput,
   CPasswordInput,
   CSubmitButton,
 } from "../custom/CustomComponents";
-import SignInIcons from "./SigninIcons";
 import GoBack from "../custom/GoBack";
 import { UserLogin, ResendConfirmation } from "../../services/AuthService";
-import { UserContext } from "../../contexts/UserContext";
+import { useUser } from "../../contexts/UserContext";
+import { loginFormModel as formModel } from "../formModel/formModel";
+import { loginValidationSchema as validationSchema } from "../formModel/validationSchema";
+import { loginInitialValues as initialValues } from "../formModel/initialValues";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import GoogleIcon from "@mui/icons-material/Google";
+import XIcon from "@mui/icons-material/X";
+import Button from "@mui/material/Button";
+import { useTheme } from "@mui/material/styles";
+import { Collapse, Skeleton } from "@mui/material";
 
-function SignIn() {
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+export default function SignIn() {
   const navigate = useNavigate();
-  const { login } = useContext(UserContext);
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-
+  const { user, login } = useUser();
   const [showAlert, setShowAlert] = useState(false);
-  const [severity, setSeverity] = useState("");
+  const [severity, setSeverity] = useState("error");
   const [message, setMessage] = useState("");
-
-  const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [success, setSuccess] = useState(false);
-
   const [sendConfLink, setSendConfLink] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (localStorage.getItem("user") !== null) {
+    document.title = "Iniciar sesión";
+    sleep(1000).then(() => setIsLoading(false));
+    if (user !== null) {
       navigate("/user/dashboard");
     }
-  });
+  }, [user, navigate]);
 
-  const handleSubmit = async () => {
-    setSuccess(false);
-    setLoading(true);
+  async function _handleSubmit(values, actions) {
+    setSendConfLink(false);
+    setShowAlert(false);
+
     try {
-      const user = await UserLogin(email, password);
-      console.log("Usuario: ", user);
-      login(user);
-      setLoading(false);
+      setSuccess(false);
+      actions.setSubmitting(true);
+
+      const { loginEmail, loginPassword } = values;
+      const loginRequest = {
+        email: loginEmail,
+        password: loginPassword,
+      };
+      const loginResponse = await UserLogin(loginRequest);
+
+      actions.setSubmitting(false);
       setSuccess(true);
-      setTimeout(() => {
-        navigate("/user/dashboard");
-      }, 2000);
-      console.log(localStorage.getItem("user"));
+      login(loginResponse, rememberMe);
+
+      sleep(2000).then(() => navigate("/user/dashboard"));
     } catch (error) {
-      if (error.response.status === 403) {
+      if (error.response.status === 409) {
         setSendConfLink(true);
+        _handleShowAlert("Usuario no confirmado", "error");
+      } else if (
+        error.response.status === 401 ||
+        error.response.status === 404
+      ) {
+        _handleShowAlert("Credenciales incorrectas", "error");
+      } else {
+        _handleShowAlert("Ha ocurrido un error", "error");
       }
-      handleShowAlert(error.response.data.message);
+    } finally {
+      actions.setSubmitting(false);
     }
-  };
+  }
 
-  const handleResendConfirmation = async () => {
+  async function _handleResendConfirmation(values) {
     try {
-      const response = await ResendConfirmation(email, setMessage);
-      handleShowAlert(response.data.message, "success");
+      const response = await ResendConfirmation(values.loginEmail);
+      _handleShowAlert(response.data.message, "success");
+      sleep(2000).then(() => setShowAlert(false));
     } catch (error) {
-      handleShowAlert(error.response.data.message);
+      _handleShowAlert("Ha ocurrido un error", "error");
     }
-  };
+  }
 
-  const handleShowAlert = (message, severity = "error") => {
+  function _handleShowAlert(message, severity) {
     setSeverity(severity);
     setMessage(message);
-    setLoading(false);
     setShowAlert(true);
-  };
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  }
 
   const sx = {
     transition: "all 0.2s",
@@ -94,74 +111,149 @@ function SignIn() {
 
   return (
     <SContainer>
-      <GoBack display={"flex"} justifyContent={"left"} />
+      {isLoading ? (
+        <Skeleton variant="rectangular" width={60} height={25} />
+      ) : (
+        <GoBack display={"flex"} justifyContent={"left"} />
+      )}
       <SBox>
         <SAvatar>
-          <LockOutlinedIcon />
+          {isLoading ? (
+            <Skeleton variant="circular" width={40} height={40} />
+          ) : (
+            <LockOutlinedIcon />
+          )}
         </SAvatar>
         <Typography component="h1" variant="h5">
-          Inicio de sesión
+          {isLoading ? <Skeleton width={210} /> : "Inicio de sesión"}
         </Typography>
-        <Box>
-          <CEmailInput email={email} setEmail={setEmail} />
-          <CPasswordInput
-            password={password}
-            setPassword={setPassword}
-            showPassword={showPassword}
-            handleClickShowPassword={handleClickShowPassword}
-            handleMouseDownPassword={handleMouseDownPassword}
-          />
-          <Box
-            my
-            //sx={{
-            //  transition: "all 0.4s",
-            //  transform: "rotateY(180deg)",
-            //}}
-          >
-            {showAlert && (
-              <Alert cursor="none" severity={severity}>
-                {message}{" "}
-                {sendConfLink && (
-                  <Link onClick={handleResendConfirmation} sx={sx}>
-                    Reenviar enlace de confirmación?
-                  </Link>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={_handleSubmit}
+        >
+          {({ isSubmitting, values }) => (
+            <Form>
+              <Box>
+                {isLoading ? (
+                  <Skeleton variant="rectangular" width="100%" height={56} />
+                ) : (
+                  <CFieldInput
+                    id={"loginEmail"}
+                    field={formModel.formField.loginEmail}
+                  />
                 )}
-              </Alert>
-            )}
-          </Box>
-          <Grid container justifyContent="space-between" alignItems="center">
-            <Grid item>
-              <FormControlLabel
-                sx={sx}
-                control={<Checkbox value="remember" color="secondary" />}
-                label="Recuérdame"
-              />
-            </Grid>
-            <Grid item>
-              <Grid container alignItems="center">
-                <Link href="/auth/forgot-password" sx={sx}>
-                  ¿Olvidó la contraseña?
-                </Link>
-              </Grid>
-            </Grid>
-          </Grid>
-          <CSubmitButton
-            handleSubmit={handleSubmit}
-            success={success}
-            buttonText={"Iniciar sesion"}
-            loading={loading}
-          />
-        </Box>
-        <SBox>
-          <Link href="/auth/register" sx={sx}>
-            ¿No tienes una cuenta? Regístrate
-          </Link>
-          <Typography>O inicia sesión con:</Typography>
-          <SignInIcons />
-        </SBox>
+                {isLoading ? (
+                  <Skeleton variant="rectangular" width="100%" height={56} />
+                ) : (
+                  <CPasswordInput
+                    id={"loginPassword"}
+                    field={formModel.formField.loginPassword}
+                  />
+                )}
+                <Box my>
+                  <Collapse in={showAlert}>
+                    <Alert cursor="none" severity={severity}>
+                      {message}
+                    </Alert>
+                    {sendConfLink && (
+                      <Link
+                        onClick={() => _handleResendConfirmation(values)}
+                        sx={sx}
+                      >
+                        {"\n¿Reenviar enlace de confirmación?"}
+                      </Link>
+                    )}
+                  </Collapse>
+                </Box>
+                <Grid
+                  container
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Grid item>
+                    {isLoading ? (
+                      <Skeleton width={120} height={40} />
+                    ) : (
+                      <FormControlLabel
+                        sx={sx}
+                        control={
+                          <Checkbox
+                            value="remember"
+                            color="secondary"
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                          />
+                        }
+                        label="Recuérdame"
+                      />
+                    )}
+                  </Grid>
+                  <Grid item>
+                    <Grid container alignItems="center">
+                      {isLoading ? (
+                        <Skeleton width={140} height={40} />
+                      ) : (
+                        <Link href="/auth/forgot-password" sx={sx}>
+                          ¿Olvidó la contraseña?
+                        </Link>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Grid>
+                {isLoading ? (
+                  <Skeleton variant="rectangular" width="100%" height={56} />
+                ) : (
+                  <CSubmitButton
+                    success={success}
+                    buttonText={"Iniciar sesión"}
+                    disablingFields={
+                      !values[formModel.formField.loginEmail.name] ||
+                      !values[formModel.formField.loginPassword.name]
+                    }
+                    isSubmitting={isSubmitting}
+                  />
+                )}
+              </Box>
+            </Form>
+          )}
+        </Formik>
+        {isLoading ? (
+          <Skeleton width={160} height={40} />
+        ) : (
+          <SBox>
+            <Link href="/auth/register" sx={sx}>
+              ¿No tienes una cuenta? Regístrate
+            </Link>
+            <Typography>O inicia sesión con:</Typography>
+            <SignInIcons />
+          </SBox>
+        )}
       </SBox>
     </SContainer>
   );
 }
 
-export default SignIn;
+function SignInIcons() {
+  const buttonSx = {
+    transition: "all 0.5s",
+    ":hover": {
+      color: useTheme().palette.secondary.main,
+      backgroundColor: "transparent",
+      transform: "scale(1.3)",
+    },
+  };
+
+  return (
+    <Box align="center">
+      <Button sx={buttonSx}>
+        <FacebookIcon />
+      </Button>
+      <Button sx={buttonSx}>
+        <GoogleIcon />
+      </Button>
+      <Button sx={buttonSx}>
+        <XIcon />
+      </Button>
+    </Box>
+  );
+}

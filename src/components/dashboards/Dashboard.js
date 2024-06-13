@@ -1,27 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Chart from "./Chart";
-import Deposits from "./Deposits";
-import Orders from "./Orders";
-import LoggedInAppBar from "../custom/LoggedInAppBar";
-import MyDrawer from "../custom/MyDrawer";
+import Chart from "./panel/Chart";
+import Deposits from "./panel/Deposits";
+import Orders from "./panel/Orders";
+import DashboardDrawer from "../custom/Drawer";
+import { useAppBar } from "../../contexts/AppBarContext";
 
 export default function Dashboard() {
-  const [open, setOpen] = React.useState(false);
-
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  const {setOpen} = useAppBar();
+  
+  useEffect(() => {
+    setOpen(false);
+  }, [setOpen]);
 
   return (
-    <Box>
-      <LoggedInAppBar open={open} />
       <Box sx={{ display: "flex" }}>
-        <MyDrawer open={open} toggleDrawer={toggleDrawer} />
+        <DashboardDrawer />
         <Box
           component="main"
           sx={{
@@ -73,6 +71,5 @@ export default function Dashboard() {
           </Container>
         </Box>
       </Box>
-    </Box>
   );
 }

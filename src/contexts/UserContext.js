@@ -6,22 +6,32 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
+    const savedUser =
+      localStorage.getItem("user") || sessionStorage.getItem("user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
   }, []);
 
-  const login = (userData) => {
-    console.log("Usuario: ", userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-    setUser(userData);
-  };
+  function login(loginResponse, rememberMe) {
+    const user = loginResponse.user;
+    if (rememberMe) {
+      localStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.removeItem("user");
+    } else {
+      sessionStorage.setItem("user", JSON.stringify(user));
+      localStorage.removeItem("user");
+    }
+    sessionStorage.setItem("token", loginResponse.jwt);
+    setUser(user);
+ }
 
-  const logout = () => {
+  function logout() {
     localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("token");
     setUser(null);
-  };
+  }
 
   return (
     <UserContext.Provider value={{ user, login, logout }}>

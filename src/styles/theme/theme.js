@@ -1,38 +1,38 @@
 import { createTheme } from "@mui/material/styles";
-import { blue, orange } from "@mui/material/colors";
+import { esES } from "@mui/x-date-pickers/locales";
+const blue = "#83ddf5";
 
 export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: blue[200],
+      main: blue,
     },
     secondary: {
-      main: orange[200],
-    },
-    white: {
-      main: "#fff",
+      main: "#ffcc80",
+      darker: "#ffb74d",
+      lighter: "#ffe0b2",
     },
   },
   typography: {
     fontFamily: "Montserrat",
   },
+  esES,
 });
 
 export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: blue[700], // Puedes ajustar estos colores según tus preferencias
+      main: "#05829a",
     },
     secondary: {
-      main: orange[400], // Puedes ajustar estos colores según tus preferencias
-    },
-    white: {
-      main: "#fff",
+      main: "#9c009f",
+      darker: "#8a0098",
     },
   },
   typography: {
     fontFamily: "Montserrat",
   },
+  esES,
 });
