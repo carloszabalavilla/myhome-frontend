@@ -7,6 +7,8 @@ import {
   Box,
   TextField,
   MenuItem,
+  Collapse,
+  Alert,
 } from "@mui/material";
 import AppleIcon from "@mui/icons-material/Apple";
 import AndroidIcon from "@mui/icons-material/Android";
@@ -20,6 +22,10 @@ const categories = [
 ];
 
 export default function Support() {
+  const [showAlert, setShowAlert] = React.useState(false);
+  const [severity, setSeverity] = React.useState("error");
+  const [message, setMessage] = React.useState("");
+
   const formik = useFormik({
     initialValues: {
       category: "",
@@ -28,13 +34,21 @@ export default function Support() {
     },
     onSubmit: (values) => {
       console.log(values);
-      alert("Formulario enviado");
+      setShowAlert(true);
+      setSeverity("success");
+      setMessage("Su mensaje ha sido enviado correctamente. Gracias por su tiempo.");
     },
   });
   return (
     <>
       <Container maxWidth="lg" sx={{ mt: 1 }}>
-        <Typography variant="h4" component="h2" gutterBottom align="center" sx={{ my: 4 }}>
+        <Typography
+          variant="h4"
+          component="h2"
+          gutterBottom
+          align="center"
+          sx={{ my: 4 }}
+        >
           Descarga nuestras aplicaciones móviles
         </Typography>
         <Grid container spacing={4} justifyContent="center">
@@ -59,7 +73,13 @@ export default function Support() {
             </Button>
           </Grid>
         </Grid>
-        <Typography variant="h4" component="h2" gutterBottom align="center" sx={{ my: 4 }}>
+        <Typography
+          variant="h4"
+          component="h2"
+          gutterBottom
+          align="center"
+          sx={{ my: 4 }}
+        >
           Sugerencias
         </Typography>
         <form onSubmit={formik.handleSubmit}>
@@ -94,6 +114,11 @@ export default function Support() {
               rows={4}
               fullWidth
             />
+            <Collapse in={showAlert}>
+              <Alert cursor="none" severity={severity}>
+                {message}
+              </Alert>
+            </Collapse>
             <Button type="submit" variant="contained" color="primary">
               Enviar
             </Button>

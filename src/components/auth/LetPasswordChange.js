@@ -20,7 +20,6 @@ export default function LetPasswordChange() {
         console.log("Token decodificado: ", jwt);
         try {
           const response = await LetRecoveryPassword(jwt);
-          console.log("Datos de respuesta del servidor: ", response.data);
           const email = encodeEmail(response.data.email);
           navigate("/auth/reset-password?email=" + email + "&token=" + token);
         } catch (error) {
