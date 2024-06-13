@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { SCenteredContainer } from "../../styles/StyledComponents";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useSnackBar } from "../../contexts/SnackBarContext";
+import { SendConfirmEmail } from "../../services/AuthService";
 
 export default function ConfirmEmail() {
   const location = useLocation();
@@ -18,10 +18,7 @@ export default function ConfirmEmail() {
       const jwt = decodeJwt(token);
       async function confirmEmail() {
         try {
-          const response = await axios.put(
-            `http://localhost:8081/api/auth/confirm`,
-            { token: jwt }
-          );
+          const response = SendConfirmEmail(jwt);
           setMessage(response.data.message);
           setSeverity("success");
           handleOpen();

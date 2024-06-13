@@ -19,11 +19,12 @@ export default function Footer() {
 
   return (
     <Paper
+      elevation={8}
       sx={{
         width: "100%",
         py: 2,
         mt: 5,
-      }}
+        }}
     >
       <Grid container direction="column" alignItems="center">
         <Grid item xs={12}>
