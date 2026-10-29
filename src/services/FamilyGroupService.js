@@ -1,9 +1,9 @@
 import axios from "./AxiosInstance";
 
-const SERVICE_URL = "/family-group";
+const SERVICE_URL = "/family";
 
 export const getFamilyGroup = async (id) => {
-  const response = await axios.get(`${SERVICE_URL}?id=${id}`);
+  const response = await axios.get(`${SERVICE_URL}/id?id=${id}`);
   return response.data;
 };
 

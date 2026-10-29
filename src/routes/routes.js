@@ -25,9 +25,6 @@ import Contact from "../components/common/footerPages/Contact";
 import About from "../components/common/footerPages/About";
 
 const routes = [
-  {
-    /*Common routes*/
-  },
   { path: "/", element: <Home />, index: true },
   { path: "/modulos", element: <Modules /> },
   { path: "/tarifas", element: <Pricing /> },
@@ -35,9 +32,6 @@ const routes = [
   { path: "/terms", element: <TermsAndConditions /> },
   { path: "/contact", element: <Contact /> },
   {path: "/about", element: <About />},
-  {
-    /*Auth routes*/
-  },
   { path: "/auth/login", element: <Login /> },
   { path: "/auth/register", element: <Register /> },
   { path: "/auth/forgot-password", element: <RecoveryPassword /> },
@@ -45,15 +39,9 @@ const routes = [
   { path: "/auth/reset-password", element: <ResetPassword /> },
   { path: "/auth/confirm", element: <ConfirmEmail /> },
   { path: "/auth/success", element: <Success /> },
-  {
-    /*Error routes*/
-  },
   { path: "*", element: <NotFound /> },
   { path: "/error/unauthorized", element: <UnauthorizedError /> },
   { path: "/error/notfound", element: <NotFound /> },
-  {
-    /*User routes*/
-  },
   {
     path: "/user/account",
     element: (

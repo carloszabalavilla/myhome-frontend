@@ -144,7 +144,7 @@ export function TaskList({ setModalOpen }) {
 
   return (
     <>
-      {taskListItems.map((item) => (
+      {taskListItems.filter(item => item.text === "Añadir tarea").map((item) => (
         <Grow key={item}>
         <React.Fragment key={item.text}>
           <ListItem disableGutters>

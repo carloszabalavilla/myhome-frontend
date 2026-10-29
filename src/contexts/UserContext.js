@@ -1,17 +1,22 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext } from "react";
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
+  const [user, setUser] = useState(() => {
     const savedUser =
       localStorage.getItem("user") || sessionStorage.getItem("user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    if (savedUser && sessionStorage.getItem("token")) {
+      try {
+        return JSON.parse(savedUser);
+      } catch {
+        localStorage.removeItem("user");
+        sessionStorage.removeItem("user");
+        sessionStorage.removeItem("token");
+      }
     }
-  }, []);
+    return null;
+  });
 
   function login(loginResponse, rememberMe) {
     const user = loginResponse.user;
@@ -26,6 +31,12 @@ export const UserProvider = ({ children }) => {
     setUser(user);
  }
 
+  function updateUser(nextUser) {
+    const storage = localStorage.getItem("user") ? localStorage : sessionStorage;
+    storage.setItem("user", JSON.stringify(nextUser));
+    setUser(nextUser);
+  }
+
   function logout() {
     localStorage.removeItem("user");
     sessionStorage.removeItem("user");
@@ -34,7 +45,7 @@ export const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, login, logout, updateUser }}>
       {children}
     </UserContext.Provider>
   );

@@ -38,7 +38,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .js,.jsx --max-warnings=0"
   },
   "eslintConfig": {
     "extends": [
@@ -59,6 +60,9 @@
     ]
   },
   "engines": {
-    "node": "20.12.2"
+    "node": ">=22 <25"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11"
   }
 }

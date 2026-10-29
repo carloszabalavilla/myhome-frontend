@@ -24,7 +24,7 @@ export default function ConfirmEmail() {
           handleOpen();
           navigate("/auth/login");
         } catch (error) {
-          if (error.response.status === 409) {
+          if (error.response?.status === 409) {
             setMessage("El usuario ya ha sido confirmado");
             setSeverity("error");
             handleOpen();

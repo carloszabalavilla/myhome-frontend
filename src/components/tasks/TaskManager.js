@@ -7,81 +7,24 @@ import AddTask from "./AddTask";
 import { useAppBar } from "../../contexts/AppBarContext";
 import { useTasks } from "../../contexts/TaskContext";
 import { blue } from "@mui/material/colors";
-import { useUser } from "../../contexts/UserContext";
-import es from "date-fns/locale/es";
-
-const BoxSx = {
-  backgroundColor: (theme) =>
-    theme.palette.mode === "light"
-      ? theme.palette.grey[100]
-      : theme.palette.grey[900],
-  flexGrow: 1,
-  height: "100vh",
-  overflow: "auto",
-};
 
 export default function TaskManager() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [selected, setSelected] = useState(null);
   const { setOpen } = useAppBar();
-  const { user } = useUser();
-  const { addTask } = useTasks();
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
-
-  async function _handleSubmit(values) {
-    console.log("handle submit, values", values);
-    setSuccess(false);
-    try {
-      const taskData = {
-        name: values.name,
-        description: values.description,
-        groupLabel: user.name,
-        date: values.date,
-        startHour: values.startHour,
-        endHour: values.endHour,
-        isEditable: false,
-        isDone: false,
-        user: user.id,
-        createdAt: new Date(),
-        createdBy: user.id,
-      };
-      await addTask(taskData);
-      setSuccess(true);
-      handleModalClose();
-    } catch (error) {
-      console.error("Error al guardar la tarea:", error);
-      alert("Error al guardar la tarea");
-    }
-  }
-
-  useEffect(() => {
-    setOpen(false);
-  }, [setOpen]);
-
-  return (
-    <Box sx={{ display: "flex" }}>
-      <DashboardDrawer secondList={"task"} setModalOpen={setModalOpen} />
-      <Box component="main" sx={BoxSx}>
-        <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
-          <TaskCalendar setModalOpen={setModalOpen} />
-        </Container>
-      </Box>
-      {modalOpen && (
-        <AddTask
-          handleSubmit={_handleSubmit}
-          open={modalOpen}
-          handleClose={handleModalClose}
-          success={success}
-        />
-      )}
+  useEffect(() => { setOpen(false); }, [setOpen]);
+  function close() { setModalOpen(false); setSelected(null); }
+  function select(task) { setSelected(task); setModalOpen(true); }
+  return <Box sx={{display:"flex"}}>
+    <DashboardDrawer secondList="task" setModalOpen={setModalOpen}/>
+    <Box component="main" sx={{flexGrow:1,height:"100vh",overflow:"auto"}}>
+      <Container maxWidth="lg" sx={{mt:10,mb:4}}><TaskCalendar setModalOpen={setModalOpen} onSelectTask={select}/></Container>
     </Box>
-  );
+    {modalOpen && <AddTask key={selected?.id || "new"} open={modalOpen} handleClose={close} task={selected}/>}
+  </Box>;
 }
 
-function TaskCalendar({ setModalOpen }) {
+function TaskCalendar({ setModalOpen, onSelectTask }) {
   const { tasks, loading } = useTasks();
 
   const [state] = useState({
@@ -111,11 +54,11 @@ function TaskCalendar({ setModalOpen }) {
   });
 
   const handleCellClick = (event, row, day) => {
-    setModalOpen();
+    setModalOpen(true);
   };
 
   const handleEventClick = (event, item) => {
-    setModalOpen();
+    onSelectTask(tasks.find(task => task.id === item.id));
 
     // Do something...
   };

@@ -70,12 +70,12 @@ export default function SignIn() {
 
       sleep(2000).then(() => navigate("/user/dashboard"));
     } catch (error) {
-      if (error.response.status === 409) {
+      if (error.response?.status === 409) {
         setSendConfLink(true);
         _handleShowAlert("Usuario no confirmado", "error");
       } else if (
-        error.response.status === 401 ||
-        error.response.status === 404
+        error.response?.status === 401 ||
+        error.response?.status === 404
       ) {
         _handleShowAlert("Credenciales incorrectas", "error");
       } else {
