@@ -3,7 +3,7 @@ const http = require('node:http');
 const net = require('node:net');
 const fs = require('node:fs');
 const path = require('node:path');
-const { spawn } = require('node:child_process');
+const { spawn, spawnSync } = require('node:child_process');
 const root = fs.existsSync(path.join(__dirname, 'web')) ? __dirname : path.resolve(__dirname, '..');
 const web = path.join(root, fs.existsSync(path.join(root, 'web')) ? 'web' : 'build');
 const jar = process.env.MYHOME_BACKEND_JAR || (fs.existsSync(path.join(root, 'backend', 'myhome.jar'))
@@ -18,7 +18,11 @@ const server = http.createServer();
 function stop(code = 0) {
   if (closing) return;
   closing = true;
-  if (child && !child.killed) child.kill();
+  if (child && !child.killed) {
+    if (process.platform === 'win32') {
+      spawnSync('taskkill.exe', ['/pid', String(child.pid), '/t', '/f'], { windowsHide: true, stdio: 'ignore' });
+    } else child.kill();
+  }
   server.close();
   setTimeout(() => process.exit(code), 500).unref();
 }
@@ -52,7 +56,14 @@ async function main() {
   await new Promise((resolve, reject) => { server.once('error', reject); server.listen(3000, '127.0.0.1', resolve); });
   fs.mkdirSync(path.join(root, '.runtime'), { recursive: true });
   const log = fs.createWriteStream(path.join(root, '.runtime', 'backend.log'), { flags: 'w' });
-  const java = process.env.JAVA_HOME ? path.join(process.env.JAVA_HOME, 'bin', process.platform === 'win32' ? 'java.exe' : 'java') : 'java';
+  let java = process.env.JAVA_HOME ? path.join(process.env.JAVA_HOME, 'bin', process.platform === 'win32' ? 'java.exe' : 'java') : 'java';
+  // Windows javapath can be a redirector that spawns another process. Launch
+  // the actual JVM so the owned child can be stopped reliably.
+  if (process.platform === 'win32') {
+    const probe = spawnSync(java, ['-XshowSettings:properties', '-version'], { encoding: 'utf8', windowsHide: true });
+    const home = ((probe.stderr || '') + (probe.stdout || '')).match(/^\s*java\.home\s*=\s*(.+)$/m)?.[1]?.trim();
+    if (home && fs.existsSync(path.join(home, 'bin', 'java.exe'))) java = path.join(home, 'bin', 'java.exe');
+  }
   child = spawn(java, ['-jar', jar, '--spring.profiles.active=demo', '--server.port=' + apiPort], { cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
   child.stdout.pipe(log); child.stderr.pipe(log);
   child.on('error', error => { console.error('No se pudo ejecutar Java 17+: ' + error.message); stop(1); });
