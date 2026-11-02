@@ -7,6 +7,7 @@ import AddTask from "./AddTask";
 import { useAppBar } from "../../contexts/AppBarContext";
 import { useTasks } from "../../contexts/TaskContext";
 import { blue } from "@mui/material/colors";
+import { Typography, Button, Stack } from "@mui/material";
 
 export default function TaskManager() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -17,8 +18,14 @@ export default function TaskManager() {
   function select(task) { setSelected(task); setModalOpen(true); }
   return <Box sx={{display:"flex"}}>
     <DashboardDrawer secondList="task" setModalOpen={setModalOpen}/>
-    <Box component="main" sx={{flexGrow:1,height:"100vh",overflow:"auto"}}>
-      <Container maxWidth="lg" sx={{mt:10,mb:4}}><TaskCalendar setModalOpen={setModalOpen} onSelectTask={select}/></Container>
+    <Box component="main" sx={{flexGrow:1,minWidth:0,minHeight:"100vh"}}>
+      <Container maxWidth="lg" sx={{mt:12,mb:4}}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" useFlexGap flexWrap="wrap" gap={2} sx={{mb:3}}>
+          <Box><Typography variant="h4" component="h1">Tu calendario.</Typography><Typography color="text.secondary" sx={{mt:1}}>Cada tarea, en su momento. Pulsa una para editarla.</Typography></Box>
+          <Button variant="contained" onClick={()=>setModalOpen(true)}>Añadir tarea</Button>
+        </Stack>
+        <Box sx={{overflowX:"auto",border:1,borderColor:"divider",borderRadius:3,bgcolor:"background.paper",p:1}}><TaskCalendar setModalOpen={setModalOpen} onSelectTask={select}/></Box>
+      </Container>
     </Box>
     {modalOpen && <AddTask key={selected?.id || "new"} open={modalOpen} handleClose={close} task={selected}/>}
   </Box>;

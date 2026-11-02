@@ -6,7 +6,9 @@ Extrae el ZIP completo y ejecuta `node start.cjs` (o `Iniciar.cmd` en Windows). 
 
 Recorridos incluidos: iniciar/cerrar sesión, crear/consultar/actualizar/eliminar tareas mediante la API y calendario de tareas, crear un grupo familiar y consultar el grupo guardado. Registro, confirmación y recuperación generan correos en `.runtime/mail/`; abre el archivo local y visita su enlace. No se envía correo real. Los tokens cambian en cada arranque.
 
-El proyecto original tiene módulos sin implementar: finanzas, nutrición, perfil y gestión de miembros/invitaciones. La demo conserva esa indicación; no los presenta como terminados. La API aún requiere una revisión de autorización por propietario antes de cualquier publicación en Internet. Esta distribución solo escucha en la máquina local.
+La portada, acceso, panel y calendario se han actualizado con una presentación responsive y navegación operativa. Se retiraron accesos sociales y avisos de notificación sin implementación. Para mostrar las credenciales ficticias en la pantalla de entrada, compila con REACT_APP_DEMO=true; el paquete local ya lo incluye.
+
+El proyecto original tiene módulos sin implementar: finanzas, nutrición, perfil y gestión de miembros/invitaciones. La demo conserva esa indicación; no los presenta como terminados. La API verifica permisos por recurso y se prueba con usuarios distintos; aún requiere una revisión completa de seguridad y dependencias antes de publicarla en Internet. Esta distribución solo escucha en la máquina local.
 
 ## Reproducir desde código
 

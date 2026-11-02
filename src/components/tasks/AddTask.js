@@ -28,9 +28,9 @@ export default function AddTask({open, handleClose, task}) {
     catch { setError("No se pudo eliminar la tarea."); }
     finally { setSaving(false); }
   }
-  return <Modal open={open} onClose={saving ? undefined : handleClose}>
+  return <Modal open={open} onClose={saving ? undefined : handleClose} aria-labelledby="task-dialog-title">
     <Box sx={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%, -50%)",width:"min(440px, 90vw)",maxHeight:"90vh",overflow:"auto",bgcolor:"background.paper",boxShadow:24,p:3}}>
-      <Typography variant="h6" component="h2">{task ? "Editar tarea" : "Añadir tarea"}</Typography>
+      <Typography id="task-dialog-title" variant="h6" component="h2">{task ? "Editar tarea" : "Añadir tarea"}</Typography>
       <Stack component="form" spacing={2} onSubmit={save} sx={{mt:2}}>
         <TextField label="Nombre" name="name" value={values.name} onChange={change} required />
         <TextField label="Descripción" name="description" value={values.description} onChange={change} multiline />

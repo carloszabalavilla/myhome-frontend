@@ -17,7 +17,7 @@ import { useAppBar } from "../../contexts/AppBarContext";
 import { Grow } from "@mui/material";
 
 export default function Drawer({ secondList, setModalOpen }) {
-  const { open, setOpen, toggleDrawer } = useAppBar();
+  const { open, setOpen } = useAppBar();
   const [moduleList, setModuleList] = useState(null);
 
   useEffect(() => {
@@ -52,9 +52,9 @@ export default function Drawer({ secondList, setModalOpen }) {
       <SDrawer
         variant="permanent"
         open={open}
-        onMouseEnter={toggleDrawer}
-        onMouseLeave={toggleDrawer}
-        sx={{ display: { sm: "flex", xl: "none" } }}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        sx={{ display: { xs: "flex", xl: "none" } }}
       >
         <Toolbar
           sx={{
@@ -72,7 +72,7 @@ export default function Drawer({ secondList, setModalOpen }) {
           >
             Menu
           </Typography>
-          <IconButton disabled={true}>
+          <IconButton aria-label="Cerrar menú" onClick={() => setOpen(false)}>
             <ChevronLeftIcon />
           </IconButton>
         </Toolbar>

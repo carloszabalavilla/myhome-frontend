@@ -6,7 +6,7 @@ export const AppBarProvider = ({ children }) => {
   const [open, setOpen] = useState(false);
 
   const toggleDrawer = () => {
-    setOpen(!open);
+    setOpen(previous => !previous);
   };
 
   return (

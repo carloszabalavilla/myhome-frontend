@@ -37,10 +37,10 @@ export function CreateFamilyGroup() {
           <Fade in={true} timeout={1000}>
             <SPaper>
               <SBox>
-                <TitleTypography variant="h3" component="h1">
+                <TitleTypography variant="h4" component="h1">
                   Aun no tienes ningún grupo familiar
                 </TitleTypography>
-                <SubtitleTypography variant="h4" component="h2">
+                <SubtitleTypography variant="body1" component="p">
                   Puedes crear tu primer grupo familiar
                 </SubtitleTypography>
                 <Divider orientation="vertical" flexItem />
