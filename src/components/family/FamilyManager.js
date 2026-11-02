@@ -73,7 +73,10 @@ function FamilyGroup() {
           <Typography variant="h4" component="h1" gutterBottom>
             {familyGroup.name}
           </Typography>
-          <Typography>El grupo está guardado. Las invitaciones y la gestión de miembros no están implementadas en la API de esta versión.</Typography>
+          <Typography>
+            El grupo está guardado. Las invitaciones y la gestión de miembros no
+            están implementadas en la API de esta versión.
+          </Typography>
         </SBox>
       </SCenteredContainer>
     </Box>

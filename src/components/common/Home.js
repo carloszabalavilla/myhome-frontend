@@ -1,11 +1,126 @@
 import React from "react";
-import {Container,Typography,Button,Grid,Box,Stack,Paper,Chip} from "@mui/material";
-import {Link} from "react-router-dom";
+import {
+  Container,
+  Typography,
+  Button,
+  Grid,
+  Box,
+  Stack,
+  Paper,
+  Chip,
+} from "@mui/material";
+import { Link } from "react-router-dom";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import Footer from "./Footer";
-export default function Home(){
-return <><Container maxWidth="lg" sx={{py:{xs:7,md:11}}}><Grid container spacing={6} alignItems="center">
-<Grid item xs={12} md={7}><Chip label="Un lugar para organizarte" size="small" sx={{mb:3}}/><Typography component="h1" sx={{fontSize:{xs:40,md:64},fontWeight:700,lineHeight:1.12,letterSpacing:"-.05em",mb:3}}>Tu casa.<br/><Box component="span" sx={{color:"primary.main"}}>Un poco más en orden.</Box></Typography><Typography color="text.secondary" sx={{fontSize:18,lineHeight:1.8,maxWidth:540,mb:4}}>Planifica tus tareas, encuentra tiempo en el calendario y reúne la información de tu grupo familiar.</Typography><Stack direction="row" spacing={2} useFlexGap flexWrap="wrap"><Button component={Link} to="/auth/login" variant="contained" size="large">Entrar en MyHome</Button><Button component={Link} to="/auth/register" variant="outlined" size="large">Crear una cuenta</Button></Stack></Grid>
-<Grid item xs={12} md={5}><Paper variant="outlined" sx={{p:{xs:3,md:4},borderRadius:4}}><Typography variant="overline" color="text.secondary">LO ESENCIAL, A MANO</Typography>{[{icon:<CalendarMonthIcon/>,title:"Tu calendario de tareas",text:"Crea, consulta y edita tus tareas con su fecha y horario."},{icon:<PeopleOutlineIcon/>,title:"Tu grupo familiar",text:"Crea un grupo y consulta su información."}].map(item=><Box key={item.title} sx={{display:"flex",gap:2,mt:3}}><Box sx={{color:"primary.main",pt:.5}}>{item.icon}</Box><Box><Typography component="h2" sx={{fontWeight:650,mb:1}}>{item.title}</Typography><Typography color="text.secondary" variant="body2" sx={{lineHeight:1.8}}>{item.text}</Typography></Box></Box>)}<Typography variant="caption" color="text.secondary" sx={{display:"block",borderTop:1,borderColor:"divider",pt:3,mt:4}}>Versión de demostración. Finanzas, nutrición y gestión de miembros siguen pendientes.</Typography></Paper></Grid>
-</Grid></Container><Footer/></>;}
+export default function Home() {
+  return (
+    <>
+      <Container maxWidth="lg" sx={{ py: { xs: 7, md: 11 } }}>
+        <Grid container spacing={6} alignItems="center">
+          <Grid item xs={12} md={7}>
+            <Chip
+              label="Un lugar para organizarte"
+              size="small"
+              sx={{ mb: 3 }}
+            />
+            <Typography
+              component="h1"
+              sx={{
+                fontSize: { xs: 40, md: 64 },
+                fontWeight: 700,
+                lineHeight: 1.12,
+                letterSpacing: "-.05em",
+                mb: 3,
+              }}
+            >
+              Tu casa.
+              <br />
+              <Box component="span" sx={{ color: "primary.main" }}>
+                Un poco más en orden.
+              </Box>
+            </Typography>
+            <Typography
+              color="text.secondary"
+              sx={{ fontSize: 18, lineHeight: 1.8, maxWidth: 540, mb: 4 }}
+            >
+              Planifica tus tareas, encuentra tiempo en el calendario y reúne la
+              información de tu grupo familiar.
+            </Typography>
+            <Stack direction="row" spacing={2} useFlexGap flexWrap="wrap">
+              <Button
+                component={Link}
+                to="/auth/login"
+                variant="contained"
+                size="large"
+              >
+                Entrar en MyHome
+              </Button>
+              <Button
+                component={Link}
+                to="/auth/register"
+                variant="outlined"
+                size="large"
+              >
+                Crear una cuenta
+              </Button>
+            </Stack>
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <Paper
+              variant="outlined"
+              sx={{ p: { xs: 3, md: 4 }, borderRadius: 4 }}
+            >
+              <Typography variant="overline" color="text.secondary">
+                LO ESENCIAL, A MANO
+              </Typography>
+              {[
+                {
+                  icon: <CalendarMonthIcon />,
+                  title: "Tu calendario de tareas",
+                  text: "Crea, consulta y edita tus tareas con su fecha y horario.",
+                },
+                {
+                  icon: <PeopleOutlineIcon />,
+                  title: "Tu grupo familiar",
+                  text: "Crea un grupo y consulta su información.",
+                },
+              ].map((item) => (
+                <Box key={item.title} sx={{ display: "flex", gap: 2, mt: 3 }}>
+                  <Box sx={{ color: "primary.main", pt: 0.5 }}>{item.icon}</Box>
+                  <Box>
+                    <Typography component="h2" sx={{ fontWeight: 650, mb: 1 }}>
+                      {item.title}
+                    </Typography>
+                    <Typography
+                      color="text.secondary"
+                      variant="body2"
+                      sx={{ lineHeight: 1.8 }}
+                    >
+                      {item.text}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  display: "block",
+                  borderTop: 1,
+                  borderColor: "divider",
+                  pt: 3,
+                  mt: 4,
+                }}
+              >
+                Versión de demostración. Finanzas, nutrición y gestión de
+                miembros siguen pendientes.
+              </Typography>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
+      <Footer />
+    </>
+  );
+}

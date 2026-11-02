@@ -1,5 +1,52 @@
-import {createTheme} from "@mui/material/styles";
-import {esES} from "@mui/x-date-pickers/locales";
-const shared={shape:{borderRadius:12},typography:{fontFamily:'"Montserrat","Segoe UI",sans-serif',h4:{fontWeight:700,letterSpacing:"-.04em"},button:{textTransform:"none",fontWeight:600}},components:{MuiButton:{styleOverrides:{root:{borderRadius:9,padding:"10px 18px",boxShadow:"none"}}},MuiPaper:{styleOverrides:{root:{backgroundImage:"none"}}},MuiAppBar:{styleOverrides:{root:{boxShadow:"none",borderBottom:"1px solid rgba(127,147,140,.2)"}}}}};
-export const lightTheme=createTheme({...shared,palette:{mode:"light",primary:{main:"#287164",contrastText:"#fff"},secondary:{main:"#e4bd79",darker:"#c79d54",lighter:"#f5e8cf"},background:{default:"#f5f7f3",paper:"#fff"},text:{primary:"#213d36",secondary:"#61756d"}}},esES);
-export const darkTheme=createTheme({...shared,palette:{mode:"dark",primary:{main:"#83c8b5",contrastText:"#102b24"},secondary:{main:"#e4bd79",darker:"#9d783b",lighter:"#f5e8cf"},background:{default:"#14241f",paper:"#1e332b"},text:{primary:"#edf5ef",secondary:"#b5c9bd"}}},esES);
+import { createTheme } from "@mui/material/styles";
+import { esES } from "@mui/x-date-pickers/locales";
+const shared = {
+  shape: { borderRadius: 12 },
+  typography: {
+    fontFamily: '"Montserrat","Segoe UI",sans-serif',
+    h4: { fontWeight: 700, letterSpacing: "-.04em" },
+    button: { textTransform: "none", fontWeight: 600 },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: { borderRadius: 9, padding: "10px 18px", boxShadow: "none" },
+      },
+    },
+    MuiPaper: { styleOverrides: { root: { backgroundImage: "none" } } },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
+          borderBottom: "1px solid rgba(127,147,140,.2)",
+        },
+      },
+    },
+  },
+};
+export const lightTheme = createTheme(
+  {
+    ...shared,
+    palette: {
+      mode: "light",
+      primary: { main: "#287164", contrastText: "#fff" },
+      secondary: { main: "#e4bd79", darker: "#c79d54", lighter: "#f5e8cf" },
+      background: { default: "#f5f7f3", paper: "#fff" },
+      text: { primary: "#213d36", secondary: "#61756d" },
+    },
+  },
+  esES,
+);
+export const darkTheme = createTheme(
+  {
+    ...shared,
+    palette: {
+      mode: "dark",
+      primary: { main: "#83c8b5", contrastText: "#102b24" },
+      secondary: { main: "#e4bd79", darker: "#9d783b", lighter: "#f5e8cf" },
+      background: { default: "#14241f", paper: "#1e332b" },
+      text: { primary: "#edf5ef", secondary: "#b5c9bd" },
+    },
+  },
+  esES,
+);

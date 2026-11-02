@@ -13,22 +13,70 @@ export default function TaskManager() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const { setOpen } = useAppBar();
-  useEffect(() => { setOpen(false); }, [setOpen]);
-  function close() { setModalOpen(false); setSelected(null); }
-  function select(task) { setSelected(task); setModalOpen(true); }
-  return <Box sx={{display:"flex"}}>
-    <DashboardDrawer secondList="task" setModalOpen={setModalOpen}/>
-    <Box component="main" sx={{flexGrow:1,minWidth:0,minHeight:"100vh"}}>
-      <Container maxWidth="lg" sx={{mt:12,mb:4}}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" useFlexGap flexWrap="wrap" gap={2} sx={{mb:3}}>
-          <Box><Typography variant="h4" component="h1">Tu calendario.</Typography><Typography color="text.secondary" sx={{mt:1}}>Cada tarea, en su momento. Pulsa una para editarla.</Typography></Box>
-          <Button variant="contained" onClick={()=>setModalOpen(true)}>Añadir tarea</Button>
-        </Stack>
-        <Box sx={{overflowX:"auto",border:1,borderColor:"divider",borderRadius:3,bgcolor:"background.paper",p:1}}><TaskCalendar setModalOpen={setModalOpen} onSelectTask={select}/></Box>
-      </Container>
+  useEffect(() => {
+    setOpen(false);
+  }, [setOpen]);
+  function close() {
+    setModalOpen(false);
+    setSelected(null);
+  }
+  function select(task) {
+    setSelected(task);
+    setModalOpen(true);
+  }
+  return (
+    <Box sx={{ display: "flex" }}>
+      <DashboardDrawer secondList="task" setModalOpen={setModalOpen} />
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, minWidth: 0, minHeight: "100vh" }}
+      >
+        <Container maxWidth="lg" sx={{ mt: 12, mb: 4 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            useFlexGap
+            flexWrap="wrap"
+            gap={2}
+            sx={{ mb: 3 }}
+          >
+            <Box>
+              <Typography variant="h4" component="h1">
+                Tu calendario.
+              </Typography>
+              <Typography color="text.secondary" sx={{ mt: 1 }}>
+                Cada tarea, en su momento. Pulsa una para editarla.
+              </Typography>
+            </Box>
+            <Button variant="contained" onClick={() => setModalOpen(true)}>
+              Añadir tarea
+            </Button>
+          </Stack>
+          <Box
+            sx={{
+              overflowX: "auto",
+              border: 1,
+              borderColor: "divider",
+              borderRadius: 3,
+              bgcolor: "background.paper",
+              p: 1,
+            }}
+          >
+            <TaskCalendar setModalOpen={setModalOpen} onSelectTask={select} />
+          </Box>
+        </Container>
+      </Box>
+      {modalOpen && (
+        <AddTask
+          key={selected?.id || "new"}
+          open={modalOpen}
+          handleClose={close}
+          task={selected}
+        />
+      )}
     </Box>
-    {modalOpen && <AddTask key={selected?.id || "new"} open={modalOpen} handleClose={close} task={selected}/>}
-  </Box>;
+  );
 }
 
 function TaskCalendar({ setModalOpen, onSelectTask }) {
@@ -65,7 +113,7 @@ function TaskCalendar({ setModalOpen, onSelectTask }) {
   };
 
   const handleEventClick = (event, item) => {
-    onSelectTask(tasks.find(task => task.id === item.id));
+    onSelectTask(tasks.find((task) => task.id === item.id));
 
     // Do something...
   };

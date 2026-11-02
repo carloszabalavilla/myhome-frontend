@@ -49,39 +49,39 @@ export default function Drawer({ secondList, setModalOpen }) {
   }, [secondList, setModalOpen]);
 
   return (
-      <SDrawer
-        variant="permanent"
-        open={open}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-        sx={{ display: { xs: "flex", xl: "none" } }}
+    <SDrawer
+      variant="permanent"
+      open={open}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      sx={{ display: { xs: "flex", xl: "none" } }}
+    >
+      <Toolbar
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          px: [1],
+        }}
       >
-        <Toolbar
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            px: [1],
-          }}
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{ cursor: "default" }}
         >
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ cursor: "default" }}
-          >
-            Menu
-          </Typography>
-          <IconButton aria-label="Cerrar menú" onClick={() => setOpen(false)}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </Toolbar>
-        <List component="nav">
-          <MenuList />
-          <Divider sx={{ my: 1 }} />
-          {moduleList}
-        </List>
-      </SDrawer>
+          Menu
+        </Typography>
+        <IconButton aria-label="Cerrar menú" onClick={() => setOpen(false)}>
+          <ChevronLeftIcon />
+        </IconButton>
+      </Toolbar>
+      <List component="nav">
+        <MenuList />
+        <Divider sx={{ my: 1 }} />
+        {moduleList}
+      </List>
+    </SDrawer>
   );
 }
 
@@ -136,7 +136,7 @@ export function MenuList({ orientation }) {
 }
 
 export function TaskList({ setModalOpen }) {
-    const handleTaskClick = (item) => {
+  const handleTaskClick = (item) => {
     if (item.text === "Añadir tarea") {
       setModalOpen(true);
     }
@@ -144,19 +144,21 @@ export function TaskList({ setModalOpen }) {
 
   return (
     <>
-      {taskListItems.filter(item => item.text === "Añadir tarea").map((item) => (
-        <Grow key={item}>
-        <React.Fragment key={item.text}>
-          <ListItem disableGutters>
-            <SListItemButton onClick={() => handleTaskClick(item)}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </SListItemButton>
-          </ListItem>
-          <Divider orientation="vertical" sx={{ mx: 1, height: "auto" }} />
-        </React.Fragment>
-        </Grow>
-      ))}
+      {taskListItems
+        .filter((item) => item.text === "Añadir tarea")
+        .map((item) => (
+          <Grow key={item}>
+            <React.Fragment key={item.text}>
+              <ListItem disableGutters>
+                <SListItemButton onClick={() => handleTaskClick(item)}>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </SListItemButton>
+              </ListItem>
+              <Divider orientation="vertical" sx={{ mx: 1, height: "auto" }} />
+            </React.Fragment>
+          </Grow>
+        ))}
     </>
   );
 }
