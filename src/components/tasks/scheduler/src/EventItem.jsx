@@ -1,6 +1,6 @@
-import React from "react"
-import PropTypes from 'prop-types'
-import {Box, Paper, Typography} from "@mui/material"
+import React from "react";
+import PropTypes from 'prop-types';
+import { Box, Paper, Typography } from "@mui/material";
 
 function EventItem(props) {
   const {
@@ -9,31 +9,31 @@ function EventItem(props) {
     sx,
     boxSx,
     elevation,
-    isMonthMode,
+
     onClick,
     onDragStart
-  } = props
-  
+  } = props;
+
   return (
     <Paper
       sx={sx}
-      draggable
+      draggable={false}
       onClick={onClick}
       onDragStart={onDragStart}
       elevation={elevation || 0}
-      key={`item-d-${event?.id}-${rowId}`}
-    >
+      key={`item-d-${event?.id}-${rowId}`}>
+
       <Box sx={boxSx}>
         {/*isMonthMode &&
-        <Typography variant="caption" sx={{fontSize: 8}}>
-          {event?.startHour} - {event?.endHour}
-        </Typography>*/}
-        <Typography variant="body2" sx={{fontSize: 11}}>
+          <Typography variant="caption" sx={{fontSize: 8}}>
+           {event?.startHour} - {event?.endHour}
+          </Typography>*/}
+        <Typography variant="body2" sx={{ fontSize: 11 }}>
           {event?.label}
         </Typography>
       </Box>
-    </Paper>
-  )
+    </Paper>);
+
 }
 
 EventItem.propTypes = {
@@ -41,13 +41,13 @@ EventItem.propTypes = {
   boxSx: PropTypes.object,
   event: PropTypes.object.isRequired,
   rowId: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
+  PropTypes.string,
+  PropTypes.number]
+  ),
   isMonthMode: PropTypes.bool,
   onClick: PropTypes.func,
   handleTaskClick: PropTypes.func,
   onCellDragStart: PropTypes.func
-}
+};
 
-export default EventItem
+export default EventItem;

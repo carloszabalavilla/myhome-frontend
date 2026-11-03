@@ -1,20 +1,19 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import PropTypes from "prop-types"
-import i18n from '../locales/locale'
+import '../locales/locale'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from "@mui/material/styles"
 import { Grid, Paper, Fade, Zoom, Slide } from "@mui/material"
 import {
-  format, 
-  getDaysInMonth, 
-  getDay, 
-  sub, 
-  startOfMonth, 
+  format,
+  getDaysInMonth,
+  getDay,
+  sub,
+  startOfMonth,
   parse,
-  add, 
-  startOfDay, 
-  startOfWeek, 
-  getWeeksInMonth, 
+  add,
+  startOfDay,
+  startOfWeek,
+  getWeeksInMonth,
   isSameDay
 } from 'date-fns'
 import SchedulerToolbar from "./Toolbar.jsx"
@@ -46,7 +45,6 @@ function Scheduler(props) {
     onAlertCloseButtonClicked
   } = props
   const today = new Date()
-  const theme = useTheme()
   const { t, i18n } = useTranslation(['common'])
   const weeks = [
     t('mon'), t('tue'), t('wed'),
@@ -114,7 +112,7 @@ function Scheduler(props) {
       headerClassName: 'scheduler-theme--header'
     }))
   }
-  
+
   /**
    * @name getMonthRows
    * @description
@@ -146,7 +144,7 @@ function Scheduler(props) {
         let day = parseInt(format(subDate, 'dd'))
         let data = events.filter((event) => (
           isSameDay(
-            subDate, 
+            subDate,
             parse(event?.date, 'yyyy-MM-dd', new Date())
           )
         ))
@@ -172,15 +170,15 @@ function Scheduler(props) {
         })
       }
     }
-  
+
     if (daysBefore.length > 0) {
       rows.push({ id: 0, days: daysBefore })
     }
-    
+
     // Add days and events data
     for (let i = 0; i < iteration; i++) {
       let obj = []
-      
+
       for (
         let j = 0;
         // This condition ensure that days will not exceed 31
@@ -190,8 +188,8 @@ function Scheduler(props) {
         j++
       ) {
         let date = parse(
-          `${dateDay}-${selectedDate}`, 
-          'dd-MMMM-yyyy', 
+          `${dateDay}-${selectedDate}`,
+          'dd-MMMM-yyyy',
           new Date()
         )
         let data = events.filter((event) => (
@@ -202,13 +200,13 @@ function Scheduler(props) {
         ))
         obj.push({
           id: `day_-${dateDay}`,
-          date, 
+          date,
           data,
           day: dateDay
         })
         dateDay++
       }
-      
+
       if (i === 0 && daysBefore.length > 0) {
         rows[0].days = rows[0].days.concat(obj)
         continue
@@ -217,12 +215,12 @@ function Scheduler(props) {
         rows.push({id: i, days: obj})
       }
     }
-    
+
     // Check if last row is not fully filled
     let lastRow = rows[iteration - 1]
     let lastRowDaysdiff = 7 - lastRow?.days?.length
     let lastDaysData = []
-    
+
     if (lastRowDaysdiff > 0) {
       let day = lastRow.days[lastRow?.days?.length-1]
       let addDate = day.date
@@ -232,23 +230,23 @@ function Scheduler(props) {
         // eslint-disable-next-line
         let data = events.filter((event) => (
           isSameDay(
-            addDate, 
+            addDate,
             parse(event?.date, 'yyyy-MM-dd', new Date())
           )
         ))
-        lastDaysData.push({ 
-          id: `day_-${d}`, 
-          date: addDate, 
-          day: d, 
+        lastDaysData.push({
+          id: `day_-${d}`,
+          date: addDate,
+          day: d,
           data
         })
       }
       rows[iteration-1].days = rows[iteration-1].days.concat(lastDaysData)
     }
-    
+
     return rows
   }
-  
+
   /**
    * @name getWeekHeader
    * @description
@@ -283,23 +281,23 @@ function Scheduler(props) {
     }
     return data
   }
-  
+
   const getWeekRows = () => {
     const HOURS = 24 //* 2
     let data = []
     let dayStartHour = startOfDay(selectedDay)
-    
+
     for (let i = 0; i <= HOURS; i++) {
       let id = `line_${i}`
       let label = format(dayStartHour, 'HH:mm aaa')
-      
+
       //TODO Add everyday event capability
       //if (i === 0) {
         //id = `line_everyday`; label = 'Everyday'
       //}
       //TODO Place the processing bloc here if everyday capability is available
       // ...
-      
+
       if (i > 0) {
         //Start processing bloc
         let obj = { id: id, label: label, days: [] }
@@ -329,23 +327,23 @@ function Scheduler(props) {
     }
     return data
   }
-  
+
   const getDayHeader = () => ([{
     date: selectedDay,
     weekDay: format(selectedDay, 'iii', { locale: dateFnsLocale }),
     day: format(selectedDay, 'dd', { locale: dateFnsLocale }),
     month: format(selectedDay, 'MM', { locale: dateFnsLocale })
   }])
-  
+
   const getDayRows = () => {
     const HOURS = 24
     let data = []
     let dayStartHour = startOfDay(selectedDay)
-    
+
     for (let i = 0; i <= HOURS; i++) {
       let id = `line_${i}`
       let label = format(dayStartHour, 'HH:mm aaa')
-      
+
       if (i > 0) {
         let obj = { id: id, label: label, days: [] }
         let columns = getDayHeader()
@@ -362,14 +360,14 @@ function Scheduler(props) {
           date: column?.date,
           data: matchedEvents
         })
-        
+
         data.push(obj)
         dayStartHour = add(dayStartHour, {minutes: 60})
       }
     }
     return data
   }
-  
+
   const getTimeLineRows = () => (
     //events.filter((event) => {
       //let eventDate = parse(event?.date, 'yyyy-MM-dd', new Date())
@@ -377,7 +375,7 @@ function Scheduler(props) {
     //})
     events
   )
-  
+
   /**
    * @name handleDateChange
    * @description
@@ -390,7 +388,7 @@ function Scheduler(props) {
     setSelectedDay(date)
     setSelectedDate(format(date, 'MMMM-yyyy'))
   }
-  
+
   /**
    * @name handleModeChange
    * @description
@@ -400,7 +398,7 @@ function Scheduler(props) {
   const handleModeChange = (newMode) => {
     setMode(newMode)
   }
-  
+
   /**
    * @name onSearchResult
    * @description
@@ -410,7 +408,7 @@ function Scheduler(props) {
   const onSearchResult = (item) => {
     setSearchResult(item)
   }
-  
+
   const handleEventsChange = async (item) => {
     onEventsChange(item)
     let eventIndex = events.findIndex(e => e.id === item?.id)
@@ -463,10 +461,11 @@ function Scheduler(props) {
     }
     // eslint-disable-next-line
   }, [
+    events,
     mode,
     weekDays,
-    daysInMonth, 
-    selectedDay, 
+    daysInMonth,
+    selectedDay,
     selectedDate,
     dateFnsLocale,
     i18n.language,
@@ -479,18 +478,14 @@ function Scheduler(props) {
       i18n.changeLanguage(locale.toLowerCase())
       updateWeekDays()
     }
-  }, [locale])
+  }, [locale, i18n])
 
   useEffect(() => {
-    if (options?.defaultMode !== mode) {
-      setMode(options?.defaultMode)
-    }
+    setMode(options?.defaultMode || "month")
   }, [options?.defaultMode])
 
   useEffect(() => {
-    if (options?.startWeekOn !== startWeekOn) {
-      setStartWeekOn(options?.startWeekOn)
-    }
+    setStartWeekOn(options?.startWeekOn || "mon")
     updateWeekDays()
   }, [options?.startWeekOn])
 

@@ -3,9 +3,6 @@ import { Box, Typography, Fade, Divider } from "@mui/material";
 import { styled } from "@mui/system";
 import DashboardDrawer from "../custom/Drawer";
 import CreateFamilyGroupForm from "./CreateFamilyGroupForm";
-import InviteFamilyMemberForm from "./InviteFamilyMemberForm";
-import AddFamilyMemberForm from "./AddFamilyMemberForm";
-import FamilyMemberList from "./FamilyMemberList";
 import { useFamilyGroup } from "../../contexts/FamilyGroupContext";
 import {
   SBox,
@@ -40,10 +37,10 @@ export function CreateFamilyGroup() {
           <Fade in={true} timeout={1000}>
             <SPaper>
               <SBox>
-                <TitleTypography variant="h3" component="h1">
+                <TitleTypography variant="h4" component="h1">
                   Aun no tienes ningún grupo familiar
                 </TitleTypography>
-                <SubtitleTypography variant="h4" component="h2">
+                <SubtitleTypography variant="body1" component="p">
                   Puedes crear tu primer grupo familiar
                 </SubtitleTypography>
                 <Divider orientation="vertical" flexItem />
@@ -67,17 +64,19 @@ export default function FamilyManager() {
 }
 
 function FamilyGroup() {
+  const { familyGroup } = useFamilyGroup();
   return (
     <Box sx={{ display: "flex" }}>
       <DashboardDrawer />
       <SCenteredContainer>
         <SBox>
           <Typography variant="h4" component="h1" gutterBottom>
-            Tu familia
+            {familyGroup.name}
           </Typography>
-          <InviteFamilyMemberForm />
-          <AddFamilyMemberForm />
-          <FamilyMemberList />
+          <Typography>
+            El grupo está guardado. Las invitaciones y la gestión de miembros no
+            están implementadas en la API de esta versión.
+          </Typography>
         </SBox>
       </SCenteredContainer>
     </Box>

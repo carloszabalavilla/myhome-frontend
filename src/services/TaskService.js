@@ -14,7 +14,7 @@ export async function GetUserTasks(userId) {
 
 export async function AddTask(task) {
   try {
-    const response = await axios.post(`${serviceURL}`, task); 
+    const response = await axios.post(`${serviceURL}`, task);
     console.log("Respuesta del servidor: ", response.data);
     return response.data;
   } catch (error) {
@@ -22,3 +22,6 @@ export async function AddTask(task) {
     throw error;
   }
 }
+
+export async function UpdateTask(task) { return (await axios.put(serviceURL, task)).data; }
+export async function DeleteTask(id) { await axios.delete(serviceURL, { params: { id } }); }

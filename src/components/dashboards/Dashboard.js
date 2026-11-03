@@ -1,75 +1,101 @@
 import React, { useEffect } from "react";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Chart from "./panel/Chart";
-import Deposits from "./panel/Deposits";
-import Orders from "./panel/Orders";
+import {
+  Box,
+  Container,
+  Toolbar,
+  Typography,
+  Button,
+  Grid,
+  Paper,
+} from "@mui/material";
+import { Link } from "react-router-dom";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import DashboardDrawer from "../custom/Drawer";
 import { useAppBar } from "../../contexts/AppBarContext";
-
+import { useUser } from "../../contexts/UserContext";
+import { useTasks } from "../../contexts/TaskContext";
 export default function Dashboard() {
-  const {setOpen} = useAppBar();
-  
+  const { setOpen } = useAppBar();
+  const { user } = useUser();
+  const { tasks } = useTasks();
   useEffect(() => {
     setOpen(false);
+    document.title = "Tu espacio · MyHome";
   }, [setOpen]);
-
   return (
-      <Box sx={{ display: "flex" }}>
-        <DashboardDrawer />
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
+    <Box sx={{ display: "flex" }}>
+      <DashboardDrawer />
+      <Box component="main" sx={{ flexGrow: 1, minWidth: 0 }}>
+        <Toolbar />
+        <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+          <Typography variant="overline" color="text.secondary">
+            TU ESPACIO
+          </Typography>
+          <Typography variant="h4" component="h1" sx={{ mt: 1, mb: 2 }}>
+            Hola, {user?.firstName}.
+          </Typography>
+          <Typography color="text.secondary" sx={{ mb: 4 }}>
+            Vamos a poner un poco de orden en el día.
+          </Typography>
+          <Grid container spacing={3}>
+            {[
+              {
+                icon: <CalendarMonthIcon />,
+                title: "Tareas del hogar",
+                text: `Tienes ${tasks.length} tareas guardadas. Consulta el calendario o prepara la siguiente.`,
+                href: "/user/tasks/management",
+                action: "Abrir calendario",
+              },
+              {
+                icon: <PeopleOutlineIcon />,
+                title: "Grupo familiar",
+                text: "Un lugar para consultar y organizar la información de tu grupo.",
+                href: "/user/family/management",
+                action: "Ver mi grupo",
+              },
+            ].map((item) => (
+              <Grid item xs={12} md={6} key={item.title}>
                 <Paper
+                  variant="outlined"
                   sx={{
-                    p: 2,
+                    p: { xs: 3, md: 4 },
+                    height: "100%",
                     display: "flex",
                     flexDirection: "column",
-                    height: 240,
+                    alignItems: "start",
                   }}
                 >
-                  <Chart />
+                  <Box sx={{ color: "primary.main", mb: 2 }}>{item.icon}</Box>
+                  <Typography
+                    component="h2"
+                    variant="h6"
+                    sx={{ fontWeight: 650 }}
+                  >
+                    {item.title}
+                  </Typography>
+                  <Typography
+                    color="text.secondary"
+                    sx={{ my: 2, lineHeight: 1.8, flex: 1 }}
+                  >
+                    {item.text}
+                  </Typography>
+                  <Button component={Link} to={item.href} variant="contained">
+                    {item.action} →
+                  </Button>
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Orders />
-                </Paper>
-              </Grid>
-            </Grid>
-          </Container>
-        </Box>
+            ))}
+          </Grid>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: "block", mt: 4 }}
+          >
+            Demostración local · datos ficticios
+          </Typography>
+        </Container>
       </Box>
+    </Box>
   );
 }

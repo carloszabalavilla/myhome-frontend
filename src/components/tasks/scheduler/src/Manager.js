@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Scheduler from "./Scheduler";
 
 export default function Manager() {
-    const [state, setState] = useState({
+    const [state] = useState({
       options: {
         transitionMode: "fade", // or fade
         startWeekOn: "Mon", // or Sun
@@ -26,7 +26,7 @@ export default function Manager() {
         showDatePicker: true
       }
     });
-  
+
     var events = [
       {
         id: "event-1",
@@ -41,23 +41,23 @@ export default function Manager() {
         createdBy: "Kristina Mayer"
       }
     ];
-  
+
     const handleCellClick = (event, row, day) => {
       // Do something...
     };
-  
+
     const handleEventClick = (event, item) => {
       // Do something...
     };
-  
+
     const handleEventsChange = (item) => {
       // Do something...
     };
-  
+
     const handleAlertCloseButtonClicked = (item) => {
       console.log("exit aler");
     };
-  
+
     return (
       <Scheduler
         locale="es"
@@ -73,4 +73,3 @@ export default function Manager() {
       />
     );
   }
-  

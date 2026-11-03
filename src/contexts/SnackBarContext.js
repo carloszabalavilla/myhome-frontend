@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, Snackbar } from "@mui/material";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 
 export const SnackBarContext = createContext();
 
@@ -9,9 +9,9 @@ export function SnackBarProvider({ children }) {
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("error");
 
-  function handleOpen() {
+  const handleOpen = useCallback(() => {
     setOpen(true);
-  }
+  }, []);
 
   function handleClose(event, reason) {
     if (reason === "clickaway") {

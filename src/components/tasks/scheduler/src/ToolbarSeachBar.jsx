@@ -1,10 +1,10 @@
-import React, {useContext, useState} from 'react'
-import PropTypes from 'prop-types'
-import { format, parse } from 'date-fns'
-import { useTranslation } from 'react-i18next'
-import { styled } from '@mui/material/styles'
-import { TextField, Autocomplete, Box } from "@mui/material"
-import DateFnsLocaleContext from "../locales/dateFnsContext"
+import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
+import { format, parse } from 'date-fns';
+import { useTranslation } from 'react-i18next';
+import { styled } from '@mui/material/styles';
+import { TextField, Autocomplete, Box } from "@mui/material";
+import DateFnsLocaleContext from "../locales/dateFnsContext";
 
 const StyledAutoComplete = styled(Autocomplete)(({ theme }) => ({
   color: 'inherit',
@@ -20,21 +20,21 @@ const StyledAutoComplete = styled(Autocomplete)(({ theme }) => ({
   },
   [theme.breakpoints.up('lg')]: {
     width: '27ch'
-  },
-}))
-
-function ToolbarSearchbar (props) {
-  const {events, onInputChange} = props
-  const { t } = useTranslation(['common'])
-  const [value, setValue] = useState('')
-  const dateFnsLocale = useContext(DateFnsLocaleContext)
-  const [inputValue, setInputValue] = useState('')
-  
-  const handleOnChange = (event, newValue) => {
-    setValue(newValue)
-    if (onInputChange) onInputChange(newValue)
   }
-  console.log('events: ', events)
+}));
+
+function ToolbarSearchbar(props) {
+  const { events, onInputChange } = props;
+  const { t } = useTranslation(['common']);
+  const [value, setValue] = useState('');
+  useContext(DateFnsLocaleContext);
+  const [inputValue, setInputValue] = useState('');
+
+  const handleOnChange = (event, newValue) => {
+    setValue(newValue);
+    if (onInputChange) onInputChange(newValue);
+  };
+  console.log('events: ', events);
   return (
     <StyledAutoComplete
       value={value}
@@ -61,43 +61,43 @@ function ToolbarSearchbar (props) {
           </Box>
         )
        */
-      getOptionLabel={(option) => (
-        option ?
-        `${option.groupLabel || ''} | (${option.startHour || ''} - ${option.endHour || ''})` : ''
-      )}
+      getOptionLabel={(option) =>
+      option ?
+      `${option.groupLabel || ''} | (${option.startHour || ''} - ${option.endHour || ''})` : ''}
+
       isOptionEqualToValue={(option, value) => option.id === value.id}
       onInputChange={(event, newInputValue) => {
-        setInputValue(newInputValue)
-        onInputChange(newInputValue)
+        setInputValue(newInputValue);
+        onInputChange(newInputValue);
       }}
-      renderOption={(props, option) => (
-        <Box component="li" sx={{fontSize: 12}} {...props}>
+      renderOption={(props, option) =>
+      <Box component="li" sx={{ fontSize: 12 }} {...props}>
           {format(
-            parse(option?.date, 'yyyy-MM-dd', new Date()),
-            'dd-MMMM-yyyy'
-          )}
+          parse(option?.date, 'yyyy-MM-dd', new Date()),
+          'dd-MMMM-yyyy'
+        )}
           ({option?.startHour || ''} - {option?.endHour || ''})
-        </Box>
-      )}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          size="small"
-          label={t('search')}
-          InputProps={{...params.InputProps}}
-        />
-      )}
-    />
-  )
+        </Box>}
+
+      renderInput={(params) =>
+      <TextField
+        {...params}
+        size="small"
+        label={t('search')}
+        InputProps={{ ...params.InputProps }} />} />);
+
+
+
+
 }
 
 ToolbarSearchbar.propTypes = {
   events: PropTypes.array,
-  onInputChange: PropTypes.func,
-}
+  onInputChange: PropTypes.func
+};
 
 ToolbarSearchbar.defaultProps = {
 
-}
+};
 
-export default ToolbarSearchbar
+export default ToolbarSearchbar;
